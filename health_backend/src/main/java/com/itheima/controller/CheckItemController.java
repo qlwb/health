@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CheckItemController {
     @Reference
     private CheckItemService checkItemService;
-    //新增
+    //新增检查项
     @RequestMapping("/add")
     public Result add(@RequestBody CheckItem checkItem){
         try {
@@ -45,6 +45,7 @@ public class CheckItemController {
     }
 
 
+    //根据id查找单个检查项
     @RequestMapping("/findById")
     public Result findById(Integer id) {
         try {
@@ -58,7 +59,7 @@ public class CheckItemController {
         }
     }
 
-
+    //更加页面提交数据，修改检查项
     @RequestMapping("/update")
     public Result edit(@RequestBody CheckItem checkItem){
         try {
@@ -67,5 +68,18 @@ public class CheckItemController {
             return new Result(false,MessageConstant.EDIT_CHECKITEM_FAIL);
         }
         return new Result(true,MessageConstant.EDIT_CHECKITEM_SUCCESS);
+    }
+
+    //根据id删除单个检查项
+    @RequestMapping("/delete")
+    public Result delete(Integer id){
+        try {
+            checkItemService.delete(id);
+        }catch (RuntimeException e){
+            return new Result(false,e.getMessage());
+        }catch (Exception e){
+            return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL);
+        }
+        return new Result(true,MessageConstant.DELETE_CHECKITEM_SUCCESS);
     }
 }
