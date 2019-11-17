@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 体检检查组管理
  */
@@ -42,6 +44,42 @@ public class CheckGroupController {
             return new Result(false, MessageConstant.ADD_CHECKGROUP_FAIL);
         }
         return new Result(true, MessageConstant.ADD_CHECKGROUP_SUCCESS);
+    }
+
+    //根据id查询单个检查组信息
+    @RequestMapping("/findById")
+    public Result findById(Integer id){
+        try {
+            CheckGroup checkGroup = checkGroupService.findById(id);
+            return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS, checkGroup);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL);
+        }
+
+    }
+
+    @RequestMapping("/findCheckItemIdsByCheckGroupId")
+    public Result findCheckItemIdsByCheckGroupId(Integer id){
+        List<Integer> checkItemIds = null;
+        try {
+            checkItemIds = checkGroupService.findCheckItemIdsByCheckGroupId(id);
+            return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS, checkItemIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL);
+        }
+    }
+
+
+    @RequestMapping("/update")
+    public Result update(@RequestBody CheckGroup checkGroup,Integer[] checkitemIds){
+        try {
+            checkGroupService.update(checkGroup,checkitemIds);
+        }catch (Exception e){
+            return new Result(false, MessageConstant.EDIT_CHECKGROUP_FAIL);
+        }
+        return new Result(true, MessageConstant.EDIT_CHECKGROUP_SUCCESS);
     }
 
 

@@ -92,6 +92,7 @@
                         <el-dialog title="新增检查组" :visible.sync="dialogFormVisible">
                             <template>
                                 <el-tabs v-model="activeName" type="card">
+                                    <!--基本信息-->
                                     <el-tab-pane label="基本信息" name="first">
                                         <el-form label-position="right" label-width="100px">
                                             <el-row>
@@ -139,6 +140,7 @@
                                         </el-form>
                                     </el-tab-pane>
 
+                                    <!--检查项信息-->
                                     <el-tab-pane label="检查项信息" name="second">
 									<div class="checkScrol">
                                         <table class="datatable">
@@ -177,6 +179,7 @@
                         <el-dialog title="编辑检查组" :visible.sync="dialogFormVisible4Edit">
                             <template>
                                 <el-tabs v-model="activeName" type="card">
+                                    <!--基本信息-->
                                     <el-tab-pane label="基本信息" name="first">
                                         <el-form label-position="right" label-width="100px">
                                             <el-row>
@@ -223,6 +226,7 @@
                                             </el-row>
                                         </el-form>
                                     </el-tab-pane>
+                                    <!--检查项信息-->
                                     <el-tab-pane label="检查项信息" name="second">
 										<div class="checkScrol">
 											<table class="datatable">
@@ -284,6 +288,24 @@
             methods: {
                 //编辑
                 handleEdit() {
+                    //发送ajax请求,将表单数据和检查项ids提交给后台
+                    axios.post("/checkgroup/update.do?checkitemIds="+this.checkitemIds,this.formData)
+                        . then((response)=> {
+                            //编辑窗体隐藏
+                            this.dialogFormVisible4Edit=false;
+                            if(response.data.flag){
+                                //检查组编辑成功，给出成功提示信息
+                                this.$message({
+                                    message:response.data.message,
+                                    type:'success'
+                                });
+                                //编辑成功后，分页查询
+                                this.findPage();
+                            }else{
+                                //检查组编辑失败，给出失败提示信息
+                                this.$message.error(response.data.message);
+                            }
+                        });
                 },
                 //添加
                 handleAdd () {
@@ -343,6 +365,36 @@
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {
+                    axios.get("/checkgroup/findById.do?id="+row.id)
+                        .then((response)=>{
+                            if(response.data.flag){
+                                this.formData = response.data.data;
+                                //默认选中第一个标签页
+                                this.activeName='first';
+                                //让编辑窗口显示
+                                this.dialogFormVisible4Edit = true;
+                                //发送ajax请求查询所有的检查项信息，用于检查项表格展示
+                                axios.get("/checkitem/findAll.do").then((res)=> {
+                                    if(res.data.flag){
+                                        //将检查项列表数据赋值给模型数据用于页面表格展示
+                                        this.tableData = res.data.data;
+                                        //发送ajax请求查询所有的检查项信息，用于检查项表格展示
+                                        axios.get("/checkgroup/findCheckItemIdsByCheckGroupId.do?id=" + row.id)
+                                            .then((res)=> {
+                                                if(res.data.flag){
+                                                    this.checkitemIds = res.data.data;
+                                                }else{
+                                                    this.$message.error(res.data.message);
+                                                }
+                                            });
+                                    }else {
+                                        this.$message.error(res.date.message);
+                                    }
+                                });
+                            }else{
+                                this.$message.error();
+                            }
+                        });
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {

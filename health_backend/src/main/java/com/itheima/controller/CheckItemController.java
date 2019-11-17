@@ -51,7 +51,6 @@ public class CheckItemController {
     @RequestMapping("/findById")
     public Result findById(Integer id) {
         try {
-            System.out.println(id);
             CheckItem checkItem = checkItemService.findById(id);
             return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS, checkItem);
         } catch (Exception e) {

@@ -9,6 +9,7 @@ import com.itheima.pojo.CheckGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +36,28 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         checkGroupDao.add(checkGroup);
         setCheckGroupAndCheackItem(checkGroup.getId(),checkitemIds);
     }
+
+    //根据id查询单个检查组信息
+    public CheckGroup findById(Integer id) {
+        return checkGroupDao.findById(id);
+    }
+
+    //根据检查组的id查询检查组中包含的检查项id
+    public List<Integer> findCheckItemIdsByCheckGroupId(Integer id) {
+        return checkGroupDao.findCheckItemIdsByCheckGroupId(id);
+    }
+
+    //编辑检查组信息 ，同时需要更新和检查项的关联关系
+    public void update(CheckGroup checkGroup, Integer[] checkitemIds) {
+        //根据检查组id删除中间表数据（清理原有关联关系）
+        checkGroupDao.deleteAssociation(checkGroup.getId());
+        //向中间表(t_checkgroup_checkitem)插入数据（建立检查组和检查项关联关系）
+        setCheckGroupAndCheackItem(checkGroup.getId(),checkitemIds);
+        //更新检查组基本信息
+        checkGroupDao.update(checkGroup);
+    }
+
+
 
     private void setCheckGroupAndCheackItem(Integer checkGroupId, Integer[] checkitemIds) {
         if(checkitemIds != null && checkitemIds.length > 0){
