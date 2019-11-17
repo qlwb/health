@@ -6,8 +6,11 @@ package com.itheima.controller;
  */
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.itheima.constant.MessageConstant;
 import com.itheima.entity.PageResult;
 import com.itheima.entity.QueryPageBean;
+import com.itheima.entity.Result;
+import com.itheima.pojo.CheckGroup;
 import com.itheima.service.CheckGroupService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,17 @@ public class CheckGroupController {
         PageResult pageResult = checkGroupService.pageQuery( queryPageBean.getCurrentPage(),
                 queryPageBean.getPageSize(), queryPageBean.getQueryString());
         return pageResult;
+    }
+
+    //新增检查组
+    @RequestMapping("/add")
+    public Result addCheckGroup(@RequestBody CheckGroup checkGroup,Integer[] checkitemIds){
+        try {
+            checkGroupService.add(checkGroup,checkitemIds);
+        }catch (Exception e){
+            return new Result(false, MessageConstant.ADD_CHECKGROUP_FAIL);
+        }
+        return new Result(true, MessageConstant.ADD_CHECKGROUP_SUCCESS);
     }
 
 

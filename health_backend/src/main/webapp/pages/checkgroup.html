@@ -287,6 +287,22 @@
                 },
                 //添加
                 handleAdd () {
+                    //发送ajax请求将模型数据提交到后台处理
+                    axios.post("/checkgroup/add.do?checkitemIds="+this.checkitemIds,this.formData)
+                        .then((response)=>{
+                            //关闭新增窗口
+                            this.dialogFormVisible=false;
+                            if(response.data.flag){
+                                //新增成功，弹出成功提示
+                                this.$message({
+                                    message:response.data.message,
+                                    type:'success'
+                                });
+                                this.findPage();
+                            }else{
+                                this.$message.error(response.data.message);
+                            }
+                        })
                 },
                 //分页查询
                 findPage() {
@@ -312,7 +328,17 @@
                     this.dialogFormVisible=true;
                     //默认切换到第一个标签页（基本信息）
                     this.activeName='first';
-
+                    //重置
+                    this.checkitemIds=[];
+                    //发送ajax请求查询所有检查项信息
+                    axios.get("/checkitem/findAll.do").then((res)=> {
+                            if(res.data.flag){
+                                //将检查项列表数据赋值给模型数据用于页面表格展示
+                                this.tableData = res.data.data;
+                            }else {
+                                this.$message.error(res.date.message);
+                            }
+                    });
 
                 },
                 // 弹出编辑窗口

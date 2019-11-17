@@ -10,6 +10,8 @@ import com.itheima.pojo.CheckItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @Author: dxw
  * @Date: 2019/11/16 21:41
@@ -53,5 +55,10 @@ public class CheckItemServiceImpl implements CheckItemService {
             throw new RuntimeException("当前检查项被引用，不能删除");
         }
         checkItemDao.deleteById(id);
+    }
+
+    //查询所有
+    public List<CheckItem> findAll() {
+        return checkItemDao.findAll();
     }
 }

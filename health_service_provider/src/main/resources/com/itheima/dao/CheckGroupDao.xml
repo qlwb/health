@@ -12,4 +12,15 @@
             </if>
         </where>
     </select>
+
+    <insert id="add" parameterType="checkGroup">
+        insert  into t_checkgroup values(null,#{code},#{name},#{helpCode},#{sex},#{remark},#{attention});
+        <selectKey resultType="integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <insert id="setCheckGroupAndCheckItem" parameterType="map">
+        insert into t_checkgroup_checkitem values(#{checkgroup_id},#{checkitem_id});
+    </insert>
 </mapper>

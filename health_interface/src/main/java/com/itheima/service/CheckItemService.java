@@ -3,6 +3,8 @@ package com.itheima.service;
 import com.itheima.entity.PageResult;
 import com.itheima.pojo.CheckItem;
 
+import java.util.List;
+
 
 /**
  * @Author: dxw
@@ -26,4 +28,7 @@ public interface CheckItemService {
 
     //根据id删除单个检查项
     void delete(Integer id);
+
+    //查询所有
+    List<CheckItem> findAll();
 }

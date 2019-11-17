@@ -37,6 +37,9 @@
        select count(*) from t_checkgroup_checkitem where checkitem_id=#{id}
     </select>
 
-
+    <!--查询所有-->
+    <select id="findAll"  resultType="checkItem">
+        select * from t_checkitem
+    </select>
 
 </mapper>

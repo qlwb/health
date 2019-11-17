@@ -3,6 +3,8 @@ package com.itheima.dao;
 import com.github.pagehelper.Page;
 import com.itheima.pojo.CheckItem;
 
+import java.util.List;
+
 /**
  * @Author: dxw
  * @Date: 2019/11/16 21:45
@@ -26,4 +28,7 @@ public interface CheckItemDao {
 
     //根据id删除单个检查项
     void deleteById(Integer id);
+
+    //查询所有
+    List<CheckItem> findAll();
 }
