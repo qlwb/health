@@ -57,6 +57,10 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         checkGroupDao.update(checkGroup);
     }
 
+    //查询所有检查组信息
+    public List<CheckGroup> findAll() {
+        return checkGroupDao.findAll();
+    }
 
 
     private void setCheckGroupAndCheackItem(Integer checkGroupId, Integer[] checkitemIds) {

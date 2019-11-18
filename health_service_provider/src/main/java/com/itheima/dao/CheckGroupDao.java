@@ -32,4 +32,7 @@ public interface CheckGroupDao {
 
     //更新检查组基本信息
     void update(CheckGroup checkGroup);
+
+    //查询所有检查组信息
+    List<CheckGroup> findAll();
 }

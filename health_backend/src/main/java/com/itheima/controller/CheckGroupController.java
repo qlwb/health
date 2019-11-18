@@ -82,6 +82,17 @@ public class CheckGroupController {
         return new Result(true, MessageConstant.EDIT_CHECKGROUP_SUCCESS);
     }
 
+    //查询所有检查组信息
+    @RequestMapping("/findAll")
+    public Result findAll(){
+        List<CheckGroup> checkGroupList = checkGroupService.findAll();
+        if(checkGroupList != null && checkGroupList.size() > 0){
+            Result result = new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS);
+            result.setData(checkGroupList);
+            return result;
+        }
+        return new Result(false,MessageConstant.QUERY_CHECKGROUP_FAIL);
+    }
 
 
 }
