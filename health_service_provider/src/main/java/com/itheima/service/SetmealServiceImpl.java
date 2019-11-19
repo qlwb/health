@@ -3,12 +3,14 @@ package com.itheima.service;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.itheima.constant.RedisConst;
 import com.itheima.dao.SetmealDao;
 import com.itheima.entity.PageResult;
 import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Setmeal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +25,8 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Autowired
     private SetmealDao setmealDao;
+    @Autowired
+    private JedisPool jedisPool;
 
     //分页查询检查套餐
     public PageResult pageQuery(Integer currentPage, Integer pageSize, String queryString) {
@@ -37,6 +41,12 @@ public class SetmealServiceImpl implements SetmealService {
     public void add(Setmeal setmeal, Integer[] checkgroupIds) {
         setmealDao.add(setmeal);
         setSetmealAndCheckGroup(setmeal.getId(), checkgroupIds);
+        //将图片名称保存到Redis
+        savePic2Redis(setmeal.getImg());
+    }
+
+    private void savePic2Redis(String img) {
+        jedisPool.getResource().sadd(RedisConst.SETMEAL_PIC_DB_RESOURCES,img);
     }
 
     private void setSetmealAndCheckGroup(Integer setmealId, Integer[] checkgroupIds) {
