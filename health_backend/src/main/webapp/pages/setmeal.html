@@ -100,6 +100,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <!--分页-->
                     <div class="pagination-container">
                         <el-pagination
                             class="pagiantion"
@@ -160,6 +161,15 @@
                                             <el-row>
                                                 <el-col :span="24">
                                                     <el-form-item label="上传图片">
+                                                        <!--
+                                                            el-upload：上传组件
+                                                            action：上传的提交地址
+                                                            auto-upload：选中文件后是否自动上传
+                                                            name：上传文件的名称，服务端可以根据名称获得上传的文件对象
+                                                            show-file-list：是否显示已上传文件列表
+                                                            on-success：文件上传成功时的钩子
+                                                            before-upload：上传文件之前的钩子
+                                                        -->
                                                         <el-upload
                                                                 class="avatar-uploader"
                                                                 action="/setmeal/upload.do"
@@ -252,6 +262,14 @@
             methods: {
                 //文件上传成功后的钩子，response为服务端返回的值，file为当前上传的文件封装成的js对象
                 handleAvatarSuccess(response, file) {
+                    this.imageUrl = "http://q15o5dvln.bkt.clouddn.com/"+response.data;
+                    console.log(this.imageUrl);
+                    this.$message({
+                        message: response.message,
+                        type: response.flag ? 'success' : 'error'
+                    });
+                    //设置模型数据（图片名称），后续提交ajax请求时会提交到后台最终保存到数据库
+                    this.formData.img = response.data;
                 },
                 //上传图片之前执行
                 beforeAvatarUpload(file) {
@@ -267,6 +285,21 @@
                 },
                 //添加
                 handleAdd () {
+                    axios.post("/setmeal/add.do?checkgroupIds=" + this.checkgroupIds,this.formData)
+                        . then((response)=> {
+                            this.dialogFormVisible = false;
+                            if(response.data.flag){
+                                this.$message({
+                                    message: response.data.message,
+                                    type: 'success'
+                                });
+                            }else{
+                                this.$message.error(response.data.message);
+                            }
+                        })
+                        .finally(()=> {
+                            this.findPage();
+                        });
                 },
                 //分页查询
                 findPage() {

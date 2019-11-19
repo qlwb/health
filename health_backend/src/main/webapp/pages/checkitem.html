@@ -325,6 +325,7 @@
             },
             // 弹出编辑窗口
             handleUpdate(row) {
+                // axios.post("/checkitem/findById.do",{id:row.id}).then((response) => {});
                 axios.get("/checkitem/findById.do?id=" + row.id).then((response) => {
                     //当请求成功时
                     if (response.data.flag) {
@@ -358,8 +359,9 @@
                                 message: res.data.message,
                                 type: 'success'
                             });
-                            this.findPage();
                         }
+                    }).finally(()=>{
+                        this.findPage();
                     });
                 });
             }

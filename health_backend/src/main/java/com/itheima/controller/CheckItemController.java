@@ -52,6 +52,9 @@ public class CheckItemController {
     public Result findById(Integer id) {
         try {
             CheckItem checkItem = checkItemService.findById(id);
+            if(checkItem==null){
+                return new Result(false, MessageConstant.QUERY_CHECKITEM_FAIL);
+            }
             return new Result(true, MessageConstant.QUERY_CHECKITEM_SUCCESS, checkItem);
         } catch (Exception e) {
             e.printStackTrace();

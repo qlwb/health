@@ -17,9 +17,9 @@ import java.io.InputStream;
  * 七牛云工具类
  */
 public class QiniuUtils {
-    public  static String accessKey = "dulF9Wze9bxujtuRvu3yyYb9JX1Sp23jzd3tO708";
-    public  static String secretKey = "vZkhW7iot3uWwcWz9vXfbaP4JepdWADFDHVLMZOe";
-    public  static String bucket = "qiniutest";
+    public  static String accessKey = "nt2wnCjq5pZPjwaimwZEq4lZD2_lQ7n1YqZa6uVQ";
+    public  static String secretKey = "8HFKABk97DiidwG80OwD8261y-9SZWjquDukSjp0";
+    public  static String bucket = "myhealth-space";
 
     public static void upload2Qiniu(String filePath,String fileName){
         //构造一个带指定Zone对象的配置类
@@ -47,7 +47,6 @@ public class QiniuUtils {
         Configuration cfg = new Configuration(Zone.zone0());
         //...其他参数参考类注释
         UploadManager uploadManager = new UploadManager(cfg);
-
         //默认不指定key的情况下，以文件内容的hash值作为文件名
         String key = fileName;
         Auth auth = Auth.create(accessKey, secretKey);
@@ -56,11 +55,11 @@ public class QiniuUtils {
             Response response = uploadManager.put(bytes, key, upToken);
             //解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-            System.out.println(putRet.key);
-            System.out.println(putRet.hash);
+            System.out.println("上传成功    "+putRet.key);
+            System.out.println("上传成功    "+putRet.hash);
         } catch (QiniuException ex) {
             Response r = ex.response;
-            System.err.println(r.toString());
+            System.err.println(r.toString()+"   错误");
             try {
                 System.err.println(r.bodyString());
             } catch (QiniuException ex2) {

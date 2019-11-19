@@ -51,6 +51,9 @@ public class CheckGroupController {
     public Result findById(Integer id){
         try {
             CheckGroup checkGroup = checkGroupService.findById(id);
+            if(checkGroup==null){
+                return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL);
+            }
             return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS, checkGroup);
         } catch (Exception e) {
             e.printStackTrace();

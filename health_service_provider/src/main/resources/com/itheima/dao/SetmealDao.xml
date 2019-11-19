@@ -2,13 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.itheima.dao.SetmealDao">
-    <select id="selectByCondition" resultType="setMeal">
+
+    <!--分页查询检查套餐-->
+    <select id="selectByCondition" parameterType="string" resultType="setMeal">
         select * from t_setmeal
         <where>
-            <if test="queryString!=null">
-                code like #{queryString} or name like #{queryString} or helpCode like #{queryString}
+            <if test="value != null and value.length > 0">
+                code like #{value} or name like #{value} or helpCode like #{value}
             </if>
         </where>
     </select>
+
+    <!--新增检查套餐信息-->
+    <insert id="add" parameterType="setMeal">
+        insert into t_setmeal
+        values(null,#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
+        <selectKey resultType="integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!--检查套餐和检查组建立联系-->
+    <insert id="setSetmealAndCheckGroup" parameterType="map">
+         insert into t_setmeal_checkgroup
+        values(#{setmeal_id},#{checkgroup_id})
+    </insert>
 
 </mapper>

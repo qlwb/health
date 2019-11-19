@@ -7,6 +7,7 @@ import com.itheima.dao.CheckGroupDao;
 import com.itheima.entity.PageResult;
 import com.itheima.pojo.CheckGroup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.Map;
  * @Author: dxw
  * @Date: 2019/11/17 17:23
  */
-@Service
+@Service(interfaceClass = CheckGroupService.class)
+@Transactional
 public class CheckGroupServiceImpl implements CheckGroupService {
 
     @Autowired
