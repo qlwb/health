@@ -28,4 +28,7 @@ public interface CheckGroupService {
 
     //查询所有检查组信息
     List<CheckGroup> findAll();
+
+    //删除选择检查组
+    void delete(Integer id);
 }
