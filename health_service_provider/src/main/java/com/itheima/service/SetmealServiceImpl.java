@@ -8,13 +8,12 @@ import com.itheima.dao.SetmealDao;
 import com.itheima.entity.PageResult;
 import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Setmeal;
+import com.itheima.utils.QiniuUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.JedisPool;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: dxw
@@ -38,7 +37,7 @@ public class SetmealServiceImpl implements SetmealService {
         return new PageResult(page.getTotal(), page.getResult());
     }
 
-   //新增检查套餐
+    //新增检查套餐
     public void add(Setmeal setmeal, Integer[] checkgroupIds) {
         setmealDao.add(setmeal);
         setSetmealAndCheckGroup(setmeal.getId(), checkgroupIds);
@@ -58,6 +57,12 @@ public class SetmealServiceImpl implements SetmealService {
 
     //编辑套餐
     public void update(Setmeal setmeal, Integer[] checkgroupIds) {
+        Setmeal setmeal_db = setmealDao.findById(setmeal.getId());
+        //删除七牛云服务器上的图片
+        QiniuUtils.deleteFileFromQiniu(setmeal_db.getImg());
+        //从Redis集合中删除图片名称
+        jedisPool.getResource().srem(RedisConst.SETMEAL_PIC_RESOURCES, setmeal_db.getImg());
+        jedisPool.getResource().srem(RedisConst.SETMEAL_PIC_DB_RESOURCES, setmeal_db.getImg());
         setmealDao.update(setmeal);
         //删除与套餐绑定的检查组
         setmealDao.deleteAssociation(setmeal.getId());
@@ -67,17 +72,32 @@ public class SetmealServiceImpl implements SetmealService {
         savePic2Redis(setmeal.getImg());
     }
 
+    //删除检查套餐信息
+    public void delete(Integer id) {
+        //删除关联
+        Setmeal setmeal = setmealDao.findById(id);
+        setmealDao.deleteAssociation(id);
+        setmealDao.delete(id);
+        //删除七牛云服务器上的图片
+        QiniuUtils.deleteFileFromQiniu(setmeal.getImg());
+        //从Redis集合中删除图片名称
+        jedisPool.getResource().srem(RedisConst.SETMEAL_PIC_RESOURCES, setmeal.getImg());
+        jedisPool.getResource().srem(RedisConst.SETMEAL_PIC_DB_RESOURCES, setmeal.getImg());
+        System.out.println(setmeal.getImg()+"删除成功");
+
+    }
+
 
     private void savePic2Redis(String img) {
-        jedisPool.getResource().sadd(RedisConst.SETMEAL_PIC_DB_RESOURCES,img);
+        jedisPool.getResource().sadd(RedisConst.SETMEAL_PIC_DB_RESOURCES, img);
     }
 
     private void setSetmealAndCheckGroup(Integer setmealId, Integer[] checkgroupIds) {
-        if(checkgroupIds != null && checkgroupIds.length > 0){
+        if (checkgroupIds != null && checkgroupIds.length > 0) {
             for (Integer checkGroupId : checkgroupIds) {
-                Map<String,Integer> map = new HashMap<>();
-                map.put("setmeal_id",setmealId);
-                map.put("checkgroup_id",checkGroupId);
+                Map<String, Integer> map = new HashMap<>();
+                map.put("setmeal_id", setmealId);
+                map.put("checkgroup_id", checkGroupId);
                 setmealDao.setSetmealAndCheckGroup(map);
             }
         }

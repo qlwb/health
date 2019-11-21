@@ -29,4 +29,7 @@ public interface SetmealDao {
 
     //删除与套餐绑定的检查组
     void deleteAssociation(Integer id);
+
+    //删除检查套餐信息
+    void delete(Integer id);
 }

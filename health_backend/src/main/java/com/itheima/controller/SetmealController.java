@@ -51,7 +51,7 @@ public class SetmealController {
             //设置文件存储的名称
             int lastIndexOf = originalFilename.lastIndexOf(".");
             //获取文件后缀
-            String suffix = originalFilename.substring(lastIndexOf - 1);
+            String suffix = originalFilename.substring(lastIndexOf);
             //使用UUID随机产生文件名称，防止同名文件覆盖
             String fileName = UUID.randomUUID().toString() + suffix;
             System.out.println(fileName);
@@ -118,5 +118,17 @@ public class SetmealController {
         }
         return new Result(true, MessageConstant.EDIT_SETMEAL_SUCCESS);
     }
+
+    @RequestMapping("/delete")
+    public Result delete(Integer id){
+        try {
+            setmealService.delete(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.DELETE_SETMEAL_FAIL);
+        }
+        return new Result(true,MessageConstant.DELETE_SETMEAL_SUCCESS);
+    }
+
 
 }

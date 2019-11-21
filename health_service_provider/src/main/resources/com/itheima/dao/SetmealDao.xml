@@ -48,4 +48,9 @@
         delete from t_setmeal_checkgroup where setmeal_id=#{id}
     </delete>
 
+    <!--删除检查套餐信息-->
+    <delete id="delete" parameterType="int">
+         delete from t_setmeal where id=#{id}
+    </delete>
+
 </mapper>

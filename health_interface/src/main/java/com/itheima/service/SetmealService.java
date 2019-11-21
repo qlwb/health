@@ -26,4 +26,7 @@ public interface SetmealService {
 
     //编辑套餐
     void update(Setmeal setmeal, Integer[] checkgroupIds);
+
+    //删除检查套餐
+    void delete(Integer id);
 }
