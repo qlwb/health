@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +45,28 @@ public class SetmealServiceImpl implements SetmealService {
         //将图片名称保存到Redis
         savePic2Redis(setmeal.getImg());
     }
+
+    //根据id查询单个套餐信息
+    public Setmeal findById(Integer id) {
+        return setmealDao.findById(id);
+    }
+
+    //根据套餐id查询对应的检查组id
+    public List<Integer> checkGroupIdBySetMealId(Integer id) {
+        return setmealDao.checkGroupIdBySetMealId(id);
+    }
+
+    //编辑套餐
+    public void update(Setmeal setmeal, Integer[] checkgroupIds) {
+        setmealDao.update(setmeal);
+        //删除与套餐绑定的检查组
+        setmealDao.deleteAssociation(setmeal.getId());
+        //重新建立联系
+        setSetmealAndCheckGroup(setmeal.getId(), checkgroupIds);
+        //将图片名称保存到Redis
+        savePic2Redis(setmeal.getImg());
+    }
+
 
     private void savePic2Redis(String img) {
         jedisPool.getResource().sadd(RedisConst.SETMEAL_PIC_DB_RESOURCES,img);

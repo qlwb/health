@@ -28,4 +28,24 @@
         values(#{setmeal_id},#{checkgroup_id})
     </insert>
 
+    <!-- 根据id查询单个套餐信息-->
+    <select id="findById" parameterType="int" resultType="setmeal">
+        select * from t_setmeal where id=#{id}
+    </select>
+
+    <!--根据套餐id查询对应的检查组id-->
+    <select id="checkGroupIdBySetMealId" parameterType="int" resultType="int">
+        select checkgroup_id from t_setmeal_checkgroup where setmeal_id=#{id}
+    </select>
+
+    <!--编辑套餐信息-->
+    <update id="update" parameterType="setmeal">
+        update t_setmeal set name=#{name},code=#{code},helpCode=#{helpCode},sex=#{sex},age=#{age},price=#{price},remark=#{remark},attention=#{attention},img=#{img} where id=#{id}
+    </update>
+
+    <!--删除与套餐绑定的检查组-->
+    <delete id="deleteAssociation" parameterType="int">
+        delete from t_setmeal_checkgroup where setmeal_id=#{id}
+    </delete>
+
 </mapper>

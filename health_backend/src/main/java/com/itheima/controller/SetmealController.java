@@ -6,6 +6,7 @@ import com.itheima.constant.RedisConst;
 import com.itheima.entity.PageResult;
 import com.itheima.entity.QueryPageBean;
 import com.itheima.entity.Result;
+import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Setmeal;
 import com.itheima.service.SetmealService;
 import com.itheima.utils.QiniuUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -75,6 +77,46 @@ public class SetmealController {
         }
         //新增套餐成功
         return new Result(true,MessageConstant.ADD_SETMEAL_SUCCESS);
+    }
+
+    //根据id查询单个套餐信息
+    @RequestMapping("/findById")
+    public Result findById(Integer id){
+        try {
+            Setmeal setmeal=setmealService.findById(id);
+            if(setmeal==null){
+                return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
+            }
+            return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, setmeal);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
+        }
+    }
+
+    //根据套餐id查询对应的检查组id
+    @RequestMapping("/checkGroupIdBySetMealId")
+    public Result checkGroupIdBySetMealId(Integer id){
+        try {
+            List<Integer> checkGroupIds = setmealService.checkGroupIdBySetMealId(id);
+            return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS, checkGroupIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL);
+        }
+
+    }
+
+
+    //编辑套餐信息
+    @RequestMapping("/update")
+    public Result update(@RequestBody Setmeal setmeal, Integer[] checkgroupIds){
+        try {
+            setmealService.update(setmeal,checkgroupIds);
+        }catch (Exception e){
+            return new Result(false, MessageConstant.EDIT_SETMEAL_FAIL);
+        }
+        return new Result(true, MessageConstant.EDIT_SETMEAL_SUCCESS);
     }
 
 }
