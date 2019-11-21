@@ -119,6 +119,7 @@ public class SetmealController {
         return new Result(true, MessageConstant.EDIT_SETMEAL_SUCCESS);
     }
 
+    //根据id删除套餐
     @RequestMapping("/delete")
     public Result delete(Integer id){
         try {

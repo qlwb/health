@@ -74,8 +74,8 @@ public class SetmealServiceImpl implements SetmealService {
 
     //删除检查套餐信息
     public void delete(Integer id) {
-        //删除关联
         Setmeal setmeal = setmealDao.findById(id);
+        //删除关联
         setmealDao.deleteAssociation(id);
         setmealDao.delete(id);
         //删除七牛云服务器上的图片
