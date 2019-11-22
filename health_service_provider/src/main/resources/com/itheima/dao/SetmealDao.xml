@@ -53,4 +53,8 @@
          delete from t_setmeal where id=#{id}
     </delete>
 
+    <select id="findAll" resultType="setmeal">
+        select * from t_setmeal
+    </select>
+
 </mapper>

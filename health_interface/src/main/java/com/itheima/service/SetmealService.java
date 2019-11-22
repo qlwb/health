@@ -29,4 +29,6 @@ public interface SetmealService {
 
     //删除检查套餐
     void delete(Integer id);
+
+    List<Setmeal> findAll();
 }

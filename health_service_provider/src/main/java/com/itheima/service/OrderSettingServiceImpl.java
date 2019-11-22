@@ -70,4 +70,18 @@ public class OrderSettingServiceImpl implements OrderSettingService {
         //把封装后的数据返回
         return mapList;
     }
+
+    //预约设置
+    public void editNumberByDate(OrderSetting orderSetting) {
+        //首先判断该日期对应的预约设置是否存在
+        Long count = orderSettingDao.findCountByOrderDate(orderSetting.getOrderDate());
+        System.out.println("count:{}"+count);
+        if (count>0){
+            //当前日期已经进行了预约设置，需要进行修改操作
+            orderSettingDao.editNumberByOrderDate(orderSetting);
+        }else {
+            //不存在 执行新增操作
+            orderSettingDao.add(orderSetting);
+        }
+    }
 }

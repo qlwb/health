@@ -57,6 +57,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     //编辑套餐
     public void update(Setmeal setmeal, Integer[] checkgroupIds) {
+        //查询单个套餐获取到图片名称
         Setmeal setmeal_db = setmealDao.findById(setmeal.getId());
         //删除七牛云服务器上的图片
         QiniuUtils.deleteFileFromQiniu(setmeal_db.getImg());
@@ -74,6 +75,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     //删除检查套餐信息
     public void delete(Integer id) {
+        //查询单个套餐获取到图片名称
         Setmeal setmeal = setmealDao.findById(id);
         //删除关联
         setmealDao.deleteAssociation(id);
@@ -85,6 +87,11 @@ public class SetmealServiceImpl implements SetmealService {
         jedisPool.getResource().srem(RedisConst.SETMEAL_PIC_DB_RESOURCES, setmeal.getImg());
         System.out.println(setmeal.getImg()+"删除成功");
 
+    }
+
+
+    public List<Setmeal> findAll() {
+        return setmealDao.findAll();
     }
 
 

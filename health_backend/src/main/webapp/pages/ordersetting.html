@@ -140,6 +140,30 @@
             methods: {
 				//预约设置
                 handleOrderSet(day){
+                    //提示用户进行输入的对话框
+                    this.$prompt('请输入可预约人数', '预约设置', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /^[0-9]*[1-9][0-9]*$/,//规定输入值规则
+                        inputErrorMessage: '只能输入正整数'//输入错误给出提示
+                    }).then(({ value }) => {
+                        var formDatas = {
+                            orderDate:this.formatDate(day.getFullYear(),day.getMonth()+1,day.getDate()),//日期
+                            number:value //可预约人数
+                        };
+                        console.log(formDatas);
+                        axios.post("/ordersetting/editNumberByDate.do",formDatas).then((response)=>{
+                            if (response.data.flag){
+                                this.initData(this.formatDate(day.getFullYear(), day.getMonth() + 1, 1));
+                                this.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
+                            }else{
+                                this.$message.error(response.data.message);
+                            }
+                        });
+                    })
                 },
 				//上传之前进行文件格式校验
                 beforeUpload(file){
@@ -237,6 +261,7 @@
                     axios.post("/ordersetting/getOrderSettingByMonth.do?date="+queryDate)
                         .then((response) => {
                             if(response.data.flag){
+                                //为模型数据赋值，通过双向绑定展示到日历中
                                 this.leftobj = response.data.data;
                             }else{
                                 this.$message.error(response.data.message);

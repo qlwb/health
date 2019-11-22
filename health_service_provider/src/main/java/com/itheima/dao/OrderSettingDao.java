@@ -28,4 +28,7 @@ public interface OrderSettingDao {
      */
     List<OrderSetting> queryOrderSettingByMonth(@Param("beginDate") String beginDate, @Param("endDate") String endDate);
 
+
+
+
 }

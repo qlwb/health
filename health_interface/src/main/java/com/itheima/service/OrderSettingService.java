@@ -15,4 +15,7 @@ public interface OrderSettingService {
 
     //根据给定的月份查询该月所有的预约设置  月份 格式:yyyy-MM
     List<Map<String,Object>> getOrderSettingByMonth(String date);
+
+    //预约设置
+    void editNumberByDate(OrderSetting orderSetting);
 }

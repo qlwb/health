@@ -37,15 +37,15 @@ public class SetmealController {
     private JedisPool jedisPool;
 
     @RequestMapping("/findPage")
-    public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
-        PageResult pageResult = setmealService.pageQuery( queryPageBean.getCurrentPage(),
+    public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
+        PageResult pageResult = setmealService.pageQuery(queryPageBean.getCurrentPage(),
                 queryPageBean.getPageSize(), queryPageBean.getQueryString());
         return pageResult;
     }
 
     @RequestMapping("upload")
-    public Result upload(MultipartFile imgFile){
-        try{
+    public Result upload(MultipartFile imgFile) {
+        try {
             //获取文件的名称
             String originalFilename = imgFile.getOriginalFilename();
             //设置文件存储的名称
@@ -56,35 +56,36 @@ public class SetmealController {
             String fileName = UUID.randomUUID().toString() + suffix;
             System.out.println(fileName);
             //上传图片到七牛云
-            QiniuUtils.upload2Qiniu(imgFile.getBytes(),fileName);
+            QiniuUtils.upload2Qiniu(imgFile.getBytes(), fileName);
             //将上传图片名称存入Redis,基于Redis的set集合存储
-            jedisPool.getResource().sadd(RedisConst.SETMEAL_PIC_RESOURCES,fileName);
+            jedisPool.getResource().sadd(RedisConst.SETMEAL_PIC_RESOURCES, fileName);
             //返回数据
-            return new Result(true,MessageConstant.PIC_UPLOAD_SUCCESS,fileName);
-        }catch (Exception e){
+            return new Result(true, MessageConstant.PIC_UPLOAD_SUCCESS, fileName);
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.PIC_UPLOAD_FAIL);
+            return new Result(false, MessageConstant.PIC_UPLOAD_FAIL);
         }
     }
+
     //新增
     @RequestMapping("/add")
-    public Result add(@RequestBody Setmeal setmeal, Integer[] checkgroupIds){
+    public Result add(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
         try {
-            setmealService.add(setmeal,checkgroupIds);
-        }catch (Exception e){
+            setmealService.add(setmeal, checkgroupIds);
+        } catch (Exception e) {
             //新增套餐失败
-            return new Result(false,MessageConstant.ADD_SETMEAL_FAIL);
+            return new Result(false, MessageConstant.ADD_SETMEAL_FAIL);
         }
         //新增套餐成功
-        return new Result(true,MessageConstant.ADD_SETMEAL_SUCCESS);
+        return new Result(true, MessageConstant.ADD_SETMEAL_SUCCESS);
     }
 
     //根据id查询单个套餐信息
     @RequestMapping("/findById")
-    public Result findById(Integer id){
+    public Result findById(Integer id) {
         try {
-            Setmeal setmeal=setmealService.findById(id);
-            if(setmeal==null){
+            Setmeal setmeal = setmealService.findById(id);
+            if (setmeal == null) {
                 return new Result(false, MessageConstant.QUERY_SETMEAL_FAIL);
             }
             return new Result(true, MessageConstant.QUERY_SETMEAL_SUCCESS, setmeal);
@@ -96,7 +97,7 @@ public class SetmealController {
 
     //根据套餐id查询对应的检查组id
     @RequestMapping("/checkGroupIdBySetMealId")
-    public Result checkGroupIdBySetMealId(Integer id){
+    public Result checkGroupIdBySetMealId(Integer id) {
         try {
             List<Integer> checkGroupIds = setmealService.checkGroupIdBySetMealId(id);
             return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS, checkGroupIds);
@@ -110,10 +111,10 @@ public class SetmealController {
 
     //编辑套餐信息
     @RequestMapping("/update")
-    public Result update(@RequestBody Setmeal setmeal, Integer[] checkgroupIds){
+    public Result update(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
         try {
-            setmealService.update(setmeal,checkgroupIds);
-        }catch (Exception e){
+            setmealService.update(setmeal, checkgroupIds);
+        } catch (Exception e) {
             return new Result(false, MessageConstant.EDIT_SETMEAL_FAIL);
         }
         return new Result(true, MessageConstant.EDIT_SETMEAL_SUCCESS);
@@ -121,14 +122,14 @@ public class SetmealController {
 
     //根据id删除套餐
     @RequestMapping("/delete")
-    public Result delete(Integer id){
+    public Result delete(Integer id) {
         try {
             setmealService.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, MessageConstant.DELETE_SETMEAL_FAIL);
         }
-        return new Result(true,MessageConstant.DELETE_SETMEAL_SUCCESS);
+        return new Result(true, MessageConstant.DELETE_SETMEAL_SUCCESS);
     }
 
 

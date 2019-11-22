@@ -10,7 +10,7 @@
 
     <!--执行更新操作-->
     <update id="editNumberByOrderDate" parameterType="orderSetting">
-        update t_ordersetting set number = #{number} where orderDate = # {orderDate}
+        update t_ordersetting set number= #{number} where orderDate = #{orderDate}
     </update>
 
     <!--执行添加操作-->
@@ -22,4 +22,6 @@
     <select id="queryOrderSettingByMonth" resultType="orderSetting">
         select * from t_ordersetting where orderDate between #{beginDate} and #{endDate}
     </select>
+
+
 </mapper>
