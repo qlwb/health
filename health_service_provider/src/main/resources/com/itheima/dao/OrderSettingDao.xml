@@ -8,12 +8,12 @@
         select count(*) from t_ordersetting where orderDate = #{orderDate}
     </select>
 
-    <!--执行更新操作-->
+    <!--执行更新可预约人数操作-->
     <update id="editNumberByOrderDate" parameterType="orderSetting">
         update t_ordersetting set number= #{number} where orderDate = #{orderDate}
     </update>
 
-    <!--执行添加操作-->
+    <!--执行添加可预约人数操作-->
     <insert id="add" parameterType="orderSetting">
         insert into t_ordersetting (orderDate,number,reservations) values (#{orderDate},#{number},#{reservations})
     </insert>
@@ -27,6 +27,7 @@
     <select id="findByOrderDate" parameterType="date" resultType="OrderSetting">
        select * from t_ordersetting where orderDate = #{orderDate}
     </select>
+
     <!--更新已预约人数-->
     <update id="editReservationsByOrderDate" parameterType="OrderSetting">
       update t_ordersetting set reservations = #{reservations} where orderDate = #{orderDate}

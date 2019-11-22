@@ -28,7 +28,6 @@ public interface OrderSettingDao {
      */
     List<OrderSetting> queryOrderSettingByMonth(@Param("beginDate") String beginDate, @Param("endDate") String endDate);
 
-
     //更新已预约人数
     void editReservationsByOrderDate(OrderSetting orderSetting);
 

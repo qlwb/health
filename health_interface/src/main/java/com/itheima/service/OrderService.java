@@ -10,4 +10,7 @@ import java.util.Map; /**
 public interface OrderService {
     //体检预约
     Result order(Map map) throws Exception;
+
+    //根据id查询预约信息，包括套餐信息和会员信息
+    Map findById(Integer id) throws Exception;
 }

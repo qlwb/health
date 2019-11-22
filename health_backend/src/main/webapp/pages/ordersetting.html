@@ -163,7 +163,12 @@
                                 this.$message.error(response.data.message);
                             }
                         });
-                    })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消输入'
+                        });
+                    });
                 },
 				//上传之前进行文件格式校验
                 beforeUpload(file){
@@ -185,6 +190,7 @@
 				//上传成功提示
                 handleSuccess(response, file) {
                     if(response.flag){
+                        this.initData(this.formatDate(new Date().getFullYear(), new Date().getMonth() + 1, 1));
                         this.$message({
                             message: response.message,
                             type: 'success'
@@ -263,6 +269,7 @@
                             if(response.data.flag){
                                 //为模型数据赋值，通过双向绑定展示到日历中
                                 this.leftobj = response.data.data;
+                                // alert(JSON.stringify(this.leftobj));
                             }else{
                                 this.$message.error(response.data.message);
                             }

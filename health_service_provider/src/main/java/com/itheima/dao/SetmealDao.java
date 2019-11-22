@@ -33,5 +33,6 @@ public interface SetmealDao {
     //删除检查套餐信息
     void delete(Integer id);
 
+    //查询所有套餐
     List<Setmeal> findAll();
 }

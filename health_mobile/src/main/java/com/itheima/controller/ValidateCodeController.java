@@ -29,6 +29,7 @@ public class ValidateCodeController {
         //生成4位验证码
         Integer code = ValidateCodeUtils.generateValidateCode(4);
         try{
+            //发送短信
             SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE,telephone,code.toString( ));
             System.out.println("发送的手机验证码为：" + code);
             //把验证码保存到缓存中 使用SENDTYPE_ORDER+手机号作为缓存中的验证码标识 有效时间5分钟
