@@ -6,7 +6,6 @@ import com.github.pagehelper.PageHelper;
 import com.itheima.constant.RedisConst;
 import com.itheima.dao.SetmealDao;
 import com.itheima.entity.PageResult;
-import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Setmeal;
 import com.itheima.utils.QiniuUtils;
 import org.springframework.beans.factory.annotation.Autowired;
