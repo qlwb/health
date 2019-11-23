@@ -58,10 +58,12 @@ public class OrderSettingServiceImpl implements OrderSettingService {
              * 这样才不会互相干扰数据
              */
             Map<String,Object> map=new HashMap<>();
-            //封装  getDay():获取日期是几号
+            //封装  getDay():获取周中的某一天
             map.put("date",orderSetting.getOrderDate().getDate());
-            map.put("number",orderSetting.getNumber());
-            map.put("reservations",orderSetting.getReservations());
+//            System.out.println("getDate()"+orderSetting.getOrderDate().getDate());
+//            System.out.println("getDay()"+orderSetting.getOrderDate().getDay());
+            map.put("number",orderSetting.getNumber());//可预约人数
+            map.put("reservations",orderSetting.getReservations());//已预约人数
             //把map集合添加到list集合中
             mapList.add(map);
         }

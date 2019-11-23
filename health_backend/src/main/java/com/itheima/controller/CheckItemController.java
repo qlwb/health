@@ -13,6 +13,7 @@ import com.itheima.pojo.CheckItem;
 import com.itheima.service.CheckItemService;
 import com.itheima.entity.Result;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,8 @@ public class CheckItemController {
     @Reference
     private CheckItemService checkItemService;
     //新增检查项
+
+    @PreAuthorize("hasAuthority('CHECKITEM_ADD')")//权限校验
     @RequestMapping("/add")
     public Result add(@RequestBody CheckItem checkItem){
         try {
@@ -39,6 +42,7 @@ public class CheckItemController {
     }
 
     //分页查询
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")//权限校验
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         PageResult pageResult = checkItemService.pageQuery( queryPageBean.getCurrentPage(),
@@ -64,6 +68,7 @@ public class CheckItemController {
     }
 
     //更加页面提交数据，修改检查项
+    @PreAuthorize("hasAuthority('CHECKITEM_EDIT')")//权限校验
     @RequestMapping("/update")
     public Result edit(@RequestBody CheckItem checkItem){
         try {
@@ -75,6 +80,7 @@ public class CheckItemController {
     }
 
     //根据id删除单个检查项
+    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")//权限校验
     @RequestMapping("/delete")
     public Result delete(Integer id){
         try {
