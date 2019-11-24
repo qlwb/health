@@ -2,6 +2,8 @@ package com.itheima.service;
 
 import com.itheima.pojo.Member;
 
+import java.util.List;
+
 /**
  * @Author: dxw
  * @Date: 2019/11/22 21:18
@@ -14,4 +16,7 @@ public interface MemberService {
 
     //注册会员
     void add(Member member);
+
+    //查询yyyy.MM的会员人数
+    List<Integer> findMemberCountByMonth(List<String> list);
 }

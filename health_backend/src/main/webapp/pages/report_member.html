@@ -37,10 +37,8 @@
         // 基于准备好的dom，初始化echarts实例
         var myChart1 = echarts.init(document.getElementById('chart1'));
 
-        // 使用刚指定的配置项和数据显示图表。
-        //myChart.setOption(option);
-
         axios.get("/report/getMemberReport.do").then((res)=>{
+            // 使用刚指定的配置项和数据显示图表。
             myChart1.setOption(
                                 {
                                     title: {
@@ -51,7 +49,8 @@
                                         data:['会员数量']
                                     },
                                     xAxis: {
-                                        data: res.data.data.months
+                                        data:res.data.data.months
+                                            // ["2019.01","2019.02","2019.03","2019.04"]
                                     },
                                     yAxis: {
                                         type:'value'
@@ -60,6 +59,7 @@
                                         name: '会员数量',
                                         type: 'line',
                                         data: res.data.data.memberCount
+                                        // [3,4,8,10]
                                     }]
                                 });
         });
