@@ -72,8 +72,14 @@
          delete from t_setmeal where id=#{id}
     </delete>
 
+    <!--查询所有套餐-->
     <select id="findAll" resultType="setmeal">
         select * from t_setmeal
+    </select>
+
+    <!--查询订单中每种套餐的数量-->
+    <select id="findSetmealCount" resultType="map" >
+        select s.name,count(o.id) as value from t_order o ,t_setmeal s where o.setmeal_id = s.id group by s.name
     </select>
 
 </mapper>

@@ -35,4 +35,7 @@ public interface SetmealDao {
 
     //查询所有套餐
     List<Setmeal> findAll();
+
+    //查询订单中每种套餐的数量
+    List<Map<String,Object>> findSetmealCount();
 }

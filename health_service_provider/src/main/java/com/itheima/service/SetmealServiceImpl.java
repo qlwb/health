@@ -88,9 +88,14 @@ public class SetmealServiceImpl implements SetmealService {
 
     }
 
-
+    //查询所有套餐
     public List<Setmeal> findAll() {
         return setmealDao.findAll();
+    }
+
+    //查询订单中每种套餐的数量
+    public List<Map<String, Object>> findSetmealCount() {
+        return setmealDao.findSetmealCount();
     }
 
 

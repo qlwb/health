@@ -5,6 +5,7 @@ import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Setmeal;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: dxw
@@ -31,4 +32,7 @@ public interface SetmealService {
     void delete(Integer id);
 
     List<Setmeal> findAll();
+
+    //查询订单中每种套餐的数量
+    List<Map<String,Object>> findSetmealCount();
 }

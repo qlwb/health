@@ -86,7 +86,7 @@
                         </div>
                         <div class="input-row">
                             <label>身份证号</label>
-                            <input v-model="orderInfo.idCard" type="text" class="input-clear" placeholder="请输入身份证号">
+                            <input v-model="orderInfo.idCard" @blur="onblur()" type="text" class="input-clear" placeholder="请输入身份证号">
                         </div>
                         <div class="date">
                             <label>体检日期</label>
@@ -111,6 +111,13 @@
                     }//预约信息
                 },
                 methods:{
+                    onblur(){
+                        //校验身份证号格式
+                        if(!checkIdCard(this.orderInfo.idCard)){
+                            this.$message.error('身份证号码输入错误，请重新输入');
+                            return ;
+                        }
+                    },
                     //发送验证码
                     sendValidateCode(){
                         //获取用户输入的手机号
