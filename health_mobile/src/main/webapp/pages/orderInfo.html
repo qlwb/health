@@ -120,7 +120,7 @@
                             this.$message.error('请输入正确的手机号');
                             return false;
                         }
-                        validateCodeButton = $("#validateCodeButton")[0];
+                        validateCodeButton = $("#validateCodeButton")[0];//锁定dom对象
                         clock = window.setInterval(doLoop, 1000); //一秒执行一次
                         axios.post("/validateCode/send4Order.do?telephone=" + telephone).then((response) => {
                             if(!response.data.flag){

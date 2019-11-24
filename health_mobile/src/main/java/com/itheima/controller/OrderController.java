@@ -30,8 +30,12 @@ public class OrderController {
 
     //体检预约
     @RequestMapping("/submit")
-    public Result submitOrder(@RequestBody Map map) {
+    public Result submitOrder(@RequestBody Map map) {//没有实体类对象能与之相对应
         String telephone = (String) map.get("telephone");
+        if(telephone==null){
+            //手机号为空，给出手机号和验证码都不能为空的提示
+            return new Result(false, MessageConstant.TELEPHONE_VALIDATECODE_NOTNULL);
+        }
         //从Redis中获取缓存的验证码，key为手机号 +RedisConstant.SENDTYPE_ORDER
         String codeInRedis = jedisPool.getResource().get(telephone + RedisMessageConstant.SENDTYPE_ORDER);
         String validateCode = (String) map.get("validateCode");

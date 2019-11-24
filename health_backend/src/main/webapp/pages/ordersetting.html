@@ -162,6 +162,8 @@
                             }else{
                                 this.$message.error(response.data.message);
                             }
+                        }).catch((r) => {
+                            this.showMessage(r);
                         });
                     }).catch(() => {
                         this.$message({
@@ -303,7 +305,18 @@
                     var d = day;
                     if (d < 10) d = "0" + d;
                     return y + "-" + m + "-" + d
+                },
+                showMessage(r) {
+                    if (r == 'Error: Request failed with status code 403') {
+                        //权限不足
+                        this.$message.error('无访问权限');
+                        return;
+                    } else {
+                        this.$message.error('未知错误');
+                        return;
+                    }
                 }
+
             }
         })
     </script>

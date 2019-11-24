@@ -36,9 +36,11 @@ public class OrderServiceImpl implements OrderService {
     public Result order(Map map) throws Exception {
         //获取预约时间
         String orderDate = (String) map.get("orderDate");
-        Date date = DateUtils.parseString2Date(orderDate);
+        Date date = DateUtils.parseString2Date(orderDate);//字符串日期转换成yyyy-MM-dd的日期类型
+        //查询所选日期能不能进行体检预约
         OrderSetting orderSetting = orderSettingDao.findByOrderDate(date);
         if (orderSetting == null) {
+            //所选日期不能进行体检预约
             return new Result(false, MessageConstant.SELECTED_DATE_CANNOT_ORDER);
         }
         //检查预约日期是否预约已满
@@ -58,6 +60,7 @@ public class OrderServiceImpl implements OrderService {
             Integer memberId = member.getId();
             int setmealId = Integer.parseInt((String) map.get("setmealId"));
             Order order = new Order(memberId, date, null, null, setmealId);
+            //查询某日期是否存在某会员预约了某套餐
             List<Order> list = orderDao.findByCondition(order);
             if (list != null && list.size() > 0) {
                 //已经完成了预约，不能重复预约
@@ -89,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
         if (map != null) {
             //处理日期格式
             Date orderDate = (Date) map.get("orderDate");
-            map.put("orderDate", DateUtils.parseDate2String(orderDate));
+            map.put("orderDate", DateUtils.parseDate2String(orderDate));//日期转换 Date -> String
         }
         return map;
     }

@@ -12,6 +12,7 @@ import com.itheima.entity.QueryPageBean;
 import com.itheima.entity.Result;
 import com.itheima.pojo.CheckGroup;
 import com.itheima.service.CheckGroupService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,7 @@ public class CheckGroupController {
     private CheckGroupService checkGroupService;
 
     //分页查询
+    @PreAuthorize("hasAuthority('CHECKGROUP_QUERY')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         PageResult pageResult = checkGroupService.pageQuery( queryPageBean.getCurrentPage(),
@@ -36,6 +38,7 @@ public class CheckGroupController {
     }
 
     //新增检查组
+    @PreAuthorize("hasAuthority('CHECKGROUP_ADD')")
     @RequestMapping("/add")
     public Result addCheckGroup(@RequestBody CheckGroup checkGroup,Integer[] checkitemIds){
         try {
@@ -75,6 +78,7 @@ public class CheckGroupController {
     }
 
 
+    @PreAuthorize("hasAuthority('CHECKGROUP_UPDATE')")
     @RequestMapping("/update")
     public Result update(@RequestBody CheckGroup checkGroup,Integer[] checkitemIds){
         try {
@@ -97,6 +101,7 @@ public class CheckGroupController {
         return new Result(false,MessageConstant.QUERY_CHECKGROUP_FAIL);
     }
 
+    @PreAuthorize("hasAuthority('CHECKGROUP_DELETE')")
     @RequestMapping("/delete")
     public Result delete(Integer id){
         try {

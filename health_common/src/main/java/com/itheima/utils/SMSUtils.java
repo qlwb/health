@@ -14,7 +14,7 @@ import com.aliyuncs.profile.IClientProfile;
  */
 public class SMSUtils {
 	public static final String VALIDATE_CODE = "SMS_178455411";//发送短信验证码
-	public static final String ORDER_NOTICE = "SMS_178455911";//体检预约成功通知
+	public static final String ORDER_NOTICE = "SMS_178461184";//体检预约成功通知
 
 	/**
 	 * 发送短信
@@ -63,8 +63,9 @@ public class SMSUtils {
 	}
 
 	public static void main(String args[]) throws Exception{
-		String validateCode = ValidateCodeUtils.generateValidateCode4String(4);
-		System.out.println("validateCode:"+validateCode);
-		SMSUtils.sendShortMessage(VALIDATE_CODE,"17353775061",validateCode);
+//		String validateCode = ValidateCodeUtils.generateValidateCode4String(4);
+//		System.out.println("validateCode:"+validateCode);
+//		SMSUtils.sendShortMessage(VALIDATE_CODE,"17353775061",validateCode);
+		SMSUtils.sendShortMessage(ORDER_NOTICE,"17353775061","2019-11-26");
 	}
 }

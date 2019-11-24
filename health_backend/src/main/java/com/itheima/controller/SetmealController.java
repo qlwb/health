@@ -11,6 +11,7 @@ import com.itheima.pojo.Setmeal;
 import com.itheima.service.SetmealService;
 import com.itheima.utils.QiniuUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,7 @@ public class SetmealController {
     @Autowired
     private JedisPool jedisPool;
 
+    @PreAuthorize("hasAuthority('SETMEAL_QUERY')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean) {
         PageResult pageResult = setmealService.pageQuery(queryPageBean.getCurrentPage(),
@@ -68,6 +70,7 @@ public class SetmealController {
     }
 
     //新增
+    @PreAuthorize("hasAuthority('SETMEAL_ADD')")
     @RequestMapping("/add")
     public Result add(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
         try {
@@ -110,6 +113,7 @@ public class SetmealController {
 
 
     //编辑套餐信息
+    @PreAuthorize("hasAuthority('SETMEAL_UPDATE')")
     @RequestMapping("/update")
     public Result update(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
         try {
@@ -121,6 +125,7 @@ public class SetmealController {
     }
 
     //根据id删除套餐
+    @PreAuthorize("hasAuthority('SETMEAL_DELETE')")
     @RequestMapping("/delete")
     public Result delete(Integer id) {
         try {

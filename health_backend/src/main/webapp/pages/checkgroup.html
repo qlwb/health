@@ -303,12 +303,15 @@
                                     message:response.data.message,
                                     type:'success'
                                 });
-                                //编辑成功后，分页查询
-                                this.findPage();
                             }else{
                                 //检查组编辑失败，给出失败提示信息
                                 this.$message.error(response.data.message);
                             }
+                            //编辑成功后，分页查询
+                            this.findPage();
+                        }).catch((r) => {
+                            this.dialogFormVisible4Edit=false;
+                            this.showMessage(r);
                         });
                 },
                 //添加
@@ -330,6 +333,9 @@
                                     } else {
                                         this.$message.error(response.data.message);
                                     }
+                                }).catch((r) => {
+                                    this.dialogFormVisible = false;
+                                    this.showMessage(r);
                                 });
                         } else {
                             this.$message.error("表单数据校验失败");
@@ -349,6 +355,8 @@
                         //分别给数据集合和总页数赋值
                         this.dataList = response.data.rows;
                         this.pagination.total = response.data.total;
+                    }).catch((r) => {
+                        this.showMessage(r);
                     });
                 },
                 // 重置表单
@@ -428,10 +436,21 @@
                                         type: 'success'
                                     });
                                 }
-                            }).finally(()=>{
                                 this.findPage();
+                            }).catch((r) => {
+                                this.showMessage(r);
                             });
                         });
+                },
+                showMessage(r) {
+                    if (r == 'Error: Request failed with status code 403') {
+                        //权限不足
+                        this.$message.error('无访问权限');
+                        return;
+                    } else {
+                        this.$message.error('未知错误');
+                        return;
+                    }
                 }
             }
         })
