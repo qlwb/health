@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.Result;
 import com.itheima.service.MemberService;
+import com.itheima.service.ReportService;
 import com.itheima.service.SetmealService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,9 @@ public class ReportController {
     @Reference
     private SetmealService setmealService;
 
+    @Reference
+    private ReportService reportService;
+
     @RequestMapping("/getMemberReport")
     public Result getMemberReport() {
         Calendar calendar = Calendar.getInstance();
@@ -44,17 +48,28 @@ public class ReportController {
 
 
     @RequestMapping("/getSetmealReport")
-    public Result getSetmealReport(){
+    public Result getSetmealReport() {
         //查询订单中每种套餐的数量
-        List<Map<String,Object>> list = setmealService.findSetmealCount();
-        Map<String,Object> map = new HashMap<>();
-        map.put("setmealCount",list);
+        List<Map<String, Object>> list = setmealService.findSetmealCount();
+        Map<String, Object> map = new HashMap<>();
+        map.put("setmealCount", list);
         List<String> setmealNames = new ArrayList<>();
         for (Map<String, Object> integerMap : list) {
             String name = (String) integerMap.get("name");
             setmealNames.add(name);
         }
-        map.put("setmealNames",setmealNames);
-        return  new Result(true, MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS,map);
+        map.put("setmealNames", setmealNames);
+        return new Result(true, MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS, map);
+    }
+
+    @RequestMapping("/getBusinessReportData")
+    public Result getBusinessReportData() {
+        try {
+            Map<String, Object> result = reportService.getBusinessReport();
+            return new Result(true, MessageConstant.GET_BUSINESS_REPORT_SUCCESS, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true, MessageConstant.GET_BUSINESS_REPORT_FAIL);
+        }
     }
 }
