@@ -190,7 +190,7 @@
             data:{
                 pagination: {//分页相关模型数据
 					  currentPage: 1,//当前页码
-					  pageSize:8,//每页显示的记录数
+					  pageSize:10,//每页显示的记录数
 					  total:0,//总记录数
 					  queryString:null//查询条件
 				},
@@ -214,20 +214,17 @@
                 handleEdit(){
                     this.$refs["dataEditForm"].validate((valid)=>{
                         if (valid){
-                            axios.post(this.back_url+"/updateMenu.do",this.formData).then((response)=>{
+                            axios.post("/menu/updateMenu.do",this.formData).then((response)=>{
                                 //关闭窗口
                                 this.dialogFormVisible4Edit=false;
-                               if (response.data.code==1){
+                               if (response.data.flag){
                                     this.$message({
                                        message:response.data.message,
                                        type:"success"
                                     });
                                }else {
-                                   this.$message.error(response.data.message,"原因:数据可能有问题");
+                                   this.$message.error(response.data.message);
                                }
-                            }).finally(()=>{
-                                console.log("最终执行");
-                                //重新加载数据
                                 this.findPage();
                             })
                         }else {
@@ -242,24 +239,21 @@
                     this.$refs["dataAddForm"].validate((valid)=>{
                         //校验成功 发送axios请求
                         if (valid){
-                            axios.post(this.back_url+"/insertMenu.do",this.formData).then((response)=>{
+                            axios.post("/menu/addMenu.do",this.formData).then((response)=>{
                                //关掉窗口
                                this.dialogFormVisible=false;
                                //判断返回的状态码
                                //1代表操作成功 0代表操作失败
-                               if (response.data.code==1){
+                               if (response.data.flag){
                                    this.$message({
                                        message:response.data.message,
                                        type:"success"
                                    })
                                }else {
-                                   this.$message.error(response.data.message,"原因:数据可能有问题");
+                                   this.$message.error(response.data.message);
                                }
-                            }).finally(()=>{
-                                console.log("最终执行");
-                                //重新加载数据
                                 this.findPage();
-                            });
+                            })
                         }else {
                             this.$message.error("表单校验失败");
                         }
@@ -305,13 +299,11 @@
                 handleUpdate(row) {
                     //row对象代表当前点击的检查项
                     console.log("row.id="+row.id);
-                    axios.get(this.back_url+"/queryMenuById/"+row.id+".do").then((response)=>{
+                    axios.get("/menu/queryMenuById/"+row.id+".do").then((response)=>{
                         //当请求成功时
-                        if (response.data.code==1){
-                            this.$nextTick(()=>{
-                                //把返回的数据赋值给表单数据
-                                this.formData=response.data.data;
-                            });
+                        if (response.data.flag){
+                            //把返回的数据赋值给表单数据
+                            this.formData=response.data.data;
                             //让编辑窗口显示  看清楚是dialogFormVisible4Edit属性不是dialogFormVisible属性
                             this.dialogFormVisible4Edit=true;
                         }else {
@@ -336,8 +328,8 @@
                         console.log("row.id="+row.id);
 
                         //发送请求
-                        axios.get(this.back_url+"/deleteMenuById/"+row.id+".do").then((response)=>{
-                            if (response.data.code==1){
+                        axios.get("/menu/deleteMenuById/"+row.id+".do").then((response)=>{
+                            if (response.data.flag){
                                 this.$message({
                                     message:response.data.message,
                                     type:"success"
@@ -345,10 +337,8 @@
                             }else {
                                 this.$message.error(response.data.message);
                             }
-                        }).finally(()=>{
-                            //重新加载数据
-                            this.findPage()
-                        });
+                            location.reload();
+                        })
                     });
                 }
             }

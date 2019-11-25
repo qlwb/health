@@ -1,9 +1,13 @@
 package com.itheima.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.itheima.dao.MenuDao;
 import com.itheima.dao.RoleDao;
 import com.itheima.dao.UserDao;
+import com.itheima.entity.PageResult;
+import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Menu;
 import com.itheima.pojo.Role;
 import com.itheima.pojo.User;
@@ -47,5 +51,35 @@ public class MenuServiceImpl implements MenuService {
             }
         }
         return menuParentList;
+    }
+
+   //分页
+    public PageResult queryMenuByPage(Integer currentPage, Integer pageSize, String queryString) {
+        //分页助手设置当前页，每页显示条数
+        PageHelper.startPage(currentPage,pageSize);
+        Page<Menu> page = menuDao.selectByCondition(queryString);
+        //封装返回的结果对象
+        return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    //根据id查询菜单信息
+    public Menu queryMenuById(Integer id) {
+        return menuDao.queryMenuById(id);
+    }
+
+    //新增菜单
+    public void insertMenu(Menu menu) {
+        menuDao.insertMenu(menu);
+    }
+
+    //编辑菜单
+    public void updateMenu(Menu menu) {
+       menuDao.updateMenu(menu);
+    }
+
+    //根据id删除菜单
+    public void deleteMenuById(Integer id) {
+        menuDao.deleteMenuAndRoleByMenuId(id);
+        menuDao.deleteMenuById(id);
     }
 }

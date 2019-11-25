@@ -1,5 +1,6 @@
 package com.itheima.dao;
 
+import com.github.pagehelper.Page;
 import com.itheima.pojo.Menu;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,4 +24,22 @@ public interface MenuDao {
      * @return
      */
     List<Menu> queryMenuByRoleIdAndLevel(@Param("roleId") Integer roleId, @Param("level") Integer level);
+
+    //分页
+    Page<Menu> selectByCondition(String queryString);
+
+    //根据id查询菜单信息
+    Menu queryMenuById(Integer id);
+
+    //新增菜单
+    void insertMenu(Menu menu);
+
+    //编辑菜单
+    void updateMenu(Menu menu);
+
+    //根据id删除菜单
+    void deleteMenuById(Integer id);
+
+    //删除中间表中的数据
+    void deleteMenuAndRoleByMenuId(Integer id);
 }

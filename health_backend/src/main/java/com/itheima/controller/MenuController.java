@@ -2,11 +2,14 @@ package com.itheima.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.constant.MessageConstant;
+import com.itheima.entity.PageResult;
+import com.itheima.entity.QueryPageBean;
 import com.itheima.entity.Result;
 import com.itheima.pojo.Menu;
 import com.itheima.pojo.MenuChild;
 import com.itheima.service.MenuService;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +28,8 @@ public class MenuController {
 
     //查出该角色对应的菜单列表
     @RequestMapping("getMenuByUsername/{username}")
-    public Result getMenuByUsername(@PathVariable String username){//接收请求路径中占位符的值
-        try{
+    public Result getMenuByUsername(@PathVariable String username) {//接收请求路径中占位符的值
+        try {
             List<Menu> menus = menuServiceImpl.queryMenuByUsername(username);
            /* List<MenuChild> menuChildList=new ArrayList<>();
             for (Menu menu : menus) {
@@ -49,10 +52,65 @@ public class MenuController {
                 }
                 menuChildList.add(menuChild);
             }*/
-            return new Result(true, MessageConstant.GET_MENU_SUCCESS,menus);
+            return new Result(true, MessageConstant.GET_MENU_SUCCESS, menus);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.GET_MENU_FAIL);
+        }
+    }
+
+
+    //分页查询所有菜单
+    @RequestMapping("queryMenuByPage")
+    public PageResult queryMenuByPage(@RequestBody QueryPageBean queryPageBean) {
+        return menuServiceImpl.queryMenuByPage(queryPageBean.getCurrentPage(),
+                queryPageBean.getPageSize(), queryPageBean.getQueryString());
+
+    }
+
+    @RequestMapping("queryMenuById/{id}")
+    public Result queryMenuById(@PathVariable Integer id) {
+        try {
+            return new Result(true, MessageConstant.QUERY_MENU_SUCCESS, menuServiceImpl.queryMenuById(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_MENU_FAIL);
+        }
+    }
+
+    //编辑菜单
+    @RequestMapping("/updateMenu")
+    public Result updateMenu(@RequestBody Menu menu) {
+        try {
+             menuServiceImpl.updateMenu(menu);
+            return new Result(true, MessageConstant.EDIT_MENU_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.EDIT_MENU_FAIL);
+        }
+    }
+
+    //新增菜单
+    @RequestMapping("/addMenu")
+    public Result insertMenu(@RequestBody Menu menu) {
+        try {
+            menuServiceImpl.insertMenu(menu);
+            return new Result(true, MessageConstant.ADD_MENU_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.ADD_MENU_FAIL);
+        }
+    }
+
+
+    @RequestMapping("deleteMenuById/{id}")
+    public Result deleteMenuById(@PathVariable Integer id){
+        try{
+            menuServiceImpl.deleteMenuById(id);
+            return new Result(true,MessageConstant.DELETE_MENU_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();
-            return new Result(false,MessageConstant.GET_MENU_FAIL);
+            return new Result(false,MessageConstant.DELETE_MENU_FAIL);
         }
     }
 }

@@ -12,4 +12,43 @@
         select * from t_menu where id in
         (select menu_id from t_role_menu where role_id=#{roleId}) and level=#{level}
     </select>
+
+    <!--按条件分页显示-->
+    <select id="selectByCondition" parameterType="string" resultType="menu">
+        select * from t_menu
+        <where>
+            <if test="value != null and value.length">
+                name like #{value}
+            </if>
+        </where>
+    </select>
+
+    <!--根据id查询菜单信息-->
+    <select id="queryMenuById" parameterType="int" resultType="Menu">
+        select *from t_menu where id=#{id}
+    </select>
+
+    <!--编辑菜单-->
+    <update id="updateMenu" parameterType="Menu">
+        update t_menu set name=#{name},linkUrl=#{linkUrl},path=#{path},priority=#{priority},icon=#{icon},
+        description=#{description},parentMenuId=#{parentMenuId},level=#{level} where id=#{id}
+    </update>
+
+    <!--新增菜单-->
+    <insert id="insertMenu" parameterType="menu">
+        insert into t_menu values(null,#{name},#{linkUrl},#{path},#{priority},#{icon},
+        #{description},#{parentMenuId},#{level})
+    </insert>
+
+    <!--根据id删除菜单-->
+    <delete id="deleteMenuById" parameterType="int">
+        delete from t_menu where id=#{id}
+    </delete>
+
+    <!--删除中间表中的数据-->
+    <delete id="deleteMenuAndRoleByMenuId" parameterType="int">
+        delete from t_role_menu where menu_id=#{id}
+    </delete>
+
+
 </mapper>
