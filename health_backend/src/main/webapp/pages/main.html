@@ -59,11 +59,11 @@
                     <el-submenu v-for="menu in menuList" :index="menu.path">
                         <template slot="title">
                             <i class="fa" :class="menu.icon"></i>
-                            {{menu.title}}
+                            {{menu.name}}
                         </template>
                         <template v-for="child in menu.children">
                             <el-menu-item :index="child.path">
-                                <a :href="child.linkUrl" target="right">{{child.title}}</a>
+                                <a :href="child.linkUrl" target="right">{{child.name}}</a>
                             </el-menu-item>
                         </template>
                     </el-submenu>
@@ -205,7 +205,15 @@
         created() {
             //发送请求获取当前登录用户的用户名
             axios.get("/user/getUsername.do").then((res)=> {
-                this.username = res.data.data;
+                if(res.data.flag){
+                    this.username = res.data.data;
+                    //再根据用户名发送请求获取菜单信息
+                    axios.get("/menu/getMenuByUsername/"+this.username+".do").then((response)=>{
+                        if (response.data.flag){
+                            this.menuList=response.data.data;
+                        }
+                    });
+                }
             });
         }
     });

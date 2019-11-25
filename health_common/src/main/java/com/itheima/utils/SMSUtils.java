@@ -66,6 +66,6 @@ public class SMSUtils {
 //		String validateCode = ValidateCodeUtils.generateValidateCode4String(4);
 //		System.out.println("validateCode:"+validateCode);
 //		SMSUtils.sendShortMessage(VALIDATE_CODE,"17353775061",validateCode);
-		SMSUtils.sendShortMessage(ORDER_NOTICE,"17353775061","2019-11-26");
+		SMSUtils.sendShortMessage(ORDER_NOTICE,"17353775061","11月26");
 	}
 }

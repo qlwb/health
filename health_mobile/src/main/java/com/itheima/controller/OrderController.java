@@ -58,7 +58,7 @@ public class OrderController {
             String orderDate = (String) map.get("orderDate");
             try {
                 SMSUtils.sendShortMessage(SMSUtils.ORDER_NOTICE, telephone, orderDate);
-            } catch (ClientException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

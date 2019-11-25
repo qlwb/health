@@ -31,8 +31,8 @@ public class ValidateCodeController {
         Integer code = ValidateCodeUtils.generateValidateCode(4);
         try {
             //发送短信
-            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE, telephone, code.toString());
-            System.out.println("发送的手机验证码为：" + code);
+//            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE, telephone, code.toString());
+            System.out.println("预约发送的手机验证码为：" + code);
             //把验证码保存到缓存中 使用SENDTYPE_ORDER+手机号作为缓存中的验证码标识 有效时间5分钟
             jedisPool.getResource().setex(telephone + RedisMessageConstant.SENDTYPE_ORDER, 5 * 60, code.toString());
             return new Result(true, MessageConstant.SEND_VALIDATECODE_SUCCESS);
@@ -47,8 +47,9 @@ public class ValidateCodeController {
         Integer code = ValidateCodeUtils.generateValidateCode(6);//生成6位数字验 证码
         try {
             //发送短信
-            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE, telephone, code.toString());
-        } catch (ClientException e) {
+//            SMSUtils.sendShortMessage(SMSUtils.VALIDATE_CODE, telephone, code.toString());
+            System.out.println("登录验证码："+code);
+        } catch (Exception e) {
             e.printStackTrace();
             //验证码发送失败
             return new Result(false, MessageConstant.SEND_VALIDATECODE_FAIL);
