@@ -26,4 +26,10 @@ public interface MenuService {
 
     //根据id删除菜单
     void deleteMenuById(Integer id);
+
+    //查询所有菜单
+    List<Menu> findAll();
+
+    //根据角色id查询中间表中的菜单id集合
+    List<Integer> queryMenuIdsByRoleId(Integer roleId);
 }

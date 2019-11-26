@@ -29,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
     //注册会员
     public void add(Member member) {
         if (member.getPassword() != null) {
-            member.setPassword(MD5Utils.md5(member.getPassword()));
+            member.setPassword(MD5Utils.md5(member.getPassword()));//密码加密
         }
         memberDao.add(member);
     }

@@ -8,6 +8,7 @@ import com.itheima.entity.Result;
 import com.itheima.pojo.Menu;
 import com.itheima.pojo.MenuChild;
 import com.itheima.service.MenuService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +25,13 @@ import java.util.List;
 @RequestMapping("/menu")
 public class MenuController {
     @Reference
-    private MenuService menuServiceImpl;
+    private MenuService menuService;
 
     //查出该角色对应的菜单列表
-    @RequestMapping("getMenuByUsername/{username}")
+    @RequestMapping("/getMenuByUsername/{username}")
     public Result getMenuByUsername(@PathVariable String username) {//接收请求路径中占位符的值
         try {
-            List<Menu> menus = menuServiceImpl.queryMenuByUsername(username);
+            List<Menu> menus = menuService.queryMenuByUsername(username);
            /* List<MenuChild> menuChildList=new ArrayList<>();
             for (Menu menu : menus) {
                 MenuChild menuChild=new MenuChild();
@@ -61,17 +62,18 @@ public class MenuController {
 
 
     //分页查询所有菜单
-    @RequestMapping("queryMenuByPage")
+    @PreAuthorize("hasAuthority('MENU_QUERY')")
+    @RequestMapping("/queryMenuByPage")
     public PageResult queryMenuByPage(@RequestBody QueryPageBean queryPageBean) {
-        return menuServiceImpl.queryMenuByPage(queryPageBean.getCurrentPage(),
+        return menuService.queryMenuByPage(queryPageBean.getCurrentPage(),
                 queryPageBean.getPageSize(), queryPageBean.getQueryString());
 
     }
 
-    @RequestMapping("queryMenuById/{id}")
+    @RequestMapping("/queryMenuById/{id}")
     public Result queryMenuById(@PathVariable Integer id) {
         try {
-            return new Result(true, MessageConstant.QUERY_MENU_SUCCESS, menuServiceImpl.queryMenuById(id));
+            return new Result(true, MessageConstant.QUERY_MENU_SUCCESS, menuService.queryMenuById(id));
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, MessageConstant.QUERY_MENU_FAIL);
@@ -79,10 +81,11 @@ public class MenuController {
     }
 
     //编辑菜单
+    @PreAuthorize("hasAuthority('MENU_EDIT')")
     @RequestMapping("/updateMenu")
     public Result updateMenu(@RequestBody Menu menu) {
         try {
-             menuServiceImpl.updateMenu(menu);
+            menuService.updateMenu(menu);
             return new Result(true, MessageConstant.EDIT_MENU_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,10 +94,11 @@ public class MenuController {
     }
 
     //新增菜单
+    @PreAuthorize("hasAuthority('MENU_ADD')")
     @RequestMapping("/addMenu")
     public Result insertMenu(@RequestBody Menu menu) {
         try {
-            menuServiceImpl.insertMenu(menu);
+            menuService.insertMenu(menu);
             return new Result(true, MessageConstant.ADD_MENU_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,14 +107,44 @@ public class MenuController {
     }
 
 
-    @RequestMapping("deleteMenuById/{id}")
-    public Result deleteMenuById(@PathVariable Integer id){
-        try{
-            menuServiceImpl.deleteMenuById(id);
-            return new Result(true,MessageConstant.DELETE_MENU_SUCCESS);
-        }catch (Exception e){
+    @PreAuthorize("hasAuthority('MENU_DELETE')")
+    @RequestMapping("/deleteMenuById/{id}")
+    public Result deleteMenuById(@PathVariable Integer id) {
+        try {
+            menuService.deleteMenuById(id);
+            return new Result(true, MessageConstant.DELETE_MENU_SUCCESS);
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.DELETE_MENU_FAIL);
+            return new Result(false, MessageConstant.DELETE_MENU_FAIL);
+        }
+    }
+
+
+    @RequestMapping("/findAll")
+    public Result findAll() {
+        try {
+            List<Menu> list = menuService.findAll();
+            return new Result(true, MessageConstant.QUERY_PERMISSION_SUCCESS, list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_PERMISSION_FAIL);
+        }
+    }
+
+    /**
+     * 根据角色id查询中间表中的菜单id集合
+     *
+     * @param roleId
+     * @return
+     */
+    @RequestMapping("/queryMenuIdsById/{roleId}")
+    public Result queryMenuIdsById(@PathVariable Integer roleId) {
+        try {
+            List<Integer> menuIds = menuService.queryMenuIdsByRoleId(roleId);
+            return new Result(true, MessageConstant.QUERY_PERMISSION_SUCCESS,menuIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_PERMISSION_FAIL);
         }
     }
 }

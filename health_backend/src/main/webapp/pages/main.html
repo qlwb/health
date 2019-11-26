@@ -211,6 +211,8 @@
                     axios.get("/menu/getMenuByUsername/"+this.username+".do").then((response)=>{
                         if (response.data.flag){
                             this.menuList=response.data.data;
+                        }else {
+                            this.$message.error(response.data.message);
                         }
                     });
                 }

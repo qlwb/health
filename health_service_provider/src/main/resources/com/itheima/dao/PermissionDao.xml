@@ -7,4 +7,14 @@
     <select id="findByRoleId" parameterType="int" resultType="permission">
        select p.* from t_permission p ,t_role_permission rp where p.id = rp.permission_id and rp.role_id = #{roleId}
     </select>
+
+    <!--查询所有权限信息-->
+    <select id="findAll" resultType="permission">
+        select * from t_permission
+    </select>
+
+    <!--查询角色拥有的权限id-->
+    <select id="queryPermissionIdsByRoleId" parameterType="int" resultType="int">
+        select permission_id from t_role_permission where role_id=#{roleId}
+    </select>
 </mapper>

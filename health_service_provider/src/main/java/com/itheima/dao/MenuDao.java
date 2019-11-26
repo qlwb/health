@@ -42,4 +42,10 @@ public interface MenuDao {
 
     //删除中间表中的数据
     void deleteMenuAndRoleByMenuId(Integer id);
+
+    //查询所有
+    List<Menu> findAll();
+
+    //根据角色id查询中间表中的菜单id集合
+    List<Integer> queryMenuIdsByRoleId(Integer roleId);
 }

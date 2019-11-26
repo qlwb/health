@@ -78,7 +78,7 @@ public class CheckGroupController {
     }
 
 
-    @PreAuthorize("hasAuthority('CHECKGROUP_UPDATE')")
+    @PreAuthorize("hasAuthority('CHECKGROUP_EDIT')")
     @RequestMapping("/update")
     public Result update(@RequestBody CheckGroup checkGroup,Integer[] checkitemIds){
         try {

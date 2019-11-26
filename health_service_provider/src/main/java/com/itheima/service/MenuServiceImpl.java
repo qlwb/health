@@ -82,4 +82,14 @@ public class MenuServiceImpl implements MenuService {
         menuDao.deleteMenuAndRoleByMenuId(id);
         menuDao.deleteMenuById(id);
     }
+
+   //查询所有菜单
+    public List<Menu> findAll() {
+        return menuDao.findAll();
+    }
+
+   //根据角色id查询中间表中的菜单id集合
+    public List<Integer> queryMenuIdsByRoleId(Integer roleId) {
+        return menuDao.queryMenuIdsByRoleId(roleId);
+    }
 }

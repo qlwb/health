@@ -6,7 +6,6 @@ import com.itheima.constant.RedisConst;
 import com.itheima.entity.PageResult;
 import com.itheima.entity.QueryPageBean;
 import com.itheima.entity.Result;
-import com.itheima.pojo.CheckGroup;
 import com.itheima.pojo.Setmeal;
 import com.itheima.service.SetmealService;
 import com.itheima.utils.QiniuUtils;
@@ -113,7 +112,7 @@ public class SetmealController {
 
 
     //编辑套餐信息
-    @PreAuthorize("hasAuthority('SETMEAL_UPDATE')")
+    @PreAuthorize("hasAuthority('SETMEAL_EDIT')")
     @RequestMapping("/update")
     public Result update(@RequestBody Setmeal setmeal, Integer[] checkgroupIds) {
         try {

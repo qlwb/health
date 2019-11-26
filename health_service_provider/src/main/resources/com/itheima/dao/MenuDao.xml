@@ -50,5 +50,15 @@
         delete from t_role_menu where menu_id=#{id}
     </delete>
 
+    <!--查询所有菜单信息-->
+    <select id="findAll" resultType="menu">
+        select * from t_menu
+    </select>
+
+    <!--根据角色id查询中间表中的菜单id集合-->
+    <select id="queryMenuIdsByRoleId" parameterType="int" resultType="int">
+        select menu_id from t_role_menu where role_id=#{roleId}
+    </select>
+
 
 </mapper>

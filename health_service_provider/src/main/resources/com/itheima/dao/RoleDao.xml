@@ -7,4 +7,73 @@
     <select id="findByUserId" parameterType="int" resultType="role">
         select r.* from t_role r ,t_user_role ur where r.id = ur.role_id and ur.user_id = #{userId}
     </select>
+
+    <!--分页-->
+    <select id="selectByCondition" parameterType="string" resultType="Role">
+        select *from t_role
+        <where>
+            <if test="value != null and value.length">
+                and name like #{value} or keyword like #{value}
+            </if>
+        </where>
+    </select>
+
+    <!--新增角色-->
+    <insert id="insertRole" parameterType="role">
+        insert into t_role values(null,#{name},#{keyword},#{description})
+        <selectKey resultType="integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!--给角色赋予权限-->
+    <insert id="insertPermissionByRoleId">
+        insert into t_role_permission values(#{roleId},#{permissionId});
+    </insert>
+
+    <!--给角色赋予菜单项-->
+    <insert id="insertMenuByRoleId">
+        insert into t_role_menu values(#{roleId},#{menuId})
+    </insert>
+
+    <!--根据id查询角色-->
+    <select id="queryRoleById" parameterType="int" resultType="Role">
+        select * from t_role where id=#{id}
+    </select>
+
+    <!--更新角色-->
+    <update id="updateRole" parameterType="role">
+        update t_role set name=#{name},keyword=#{keyword},description=#{description} where id=#{id}
+    </update>
+
+    <!--删除角色拥有的权限-->
+    <delete id="deletePermissionIdsByRoleId" parameterType="int">
+        delete from t_role_permission where role_id=#{id}
+    </delete>
+
+
+    <!--删除角色拥有的菜单-->
+    <delete id="deleteMenuIdsByRoleId" parameterType="int">
+        delete from t_role_menu where role_id=#{id}
+    </delete>
+
+    <!--删除用户对应的角色-->
+    <delete id="deleteUserIdsByRoleId" parameterType="int">
+        delete from t_user_role where role_id=#{id}
+    </delete>
+
+    <!--删除角色-->
+    <delete id="deleteRoleById" parameterType="int">
+        delete from t_role where id=#{id}
+    </delete>
+
+    <!--查询所有角色-->
+    <select id="findAll" resultType="role">
+        select * from t_role
+    </select>
+
+    <!--查询用户已有的角色-->
+    <select id="findRoleIdsByUserId" parameterType="int" resultType="int">
+        select role_id from t_user_role where user_id=#{id}
+    </select>
 </mapper>
