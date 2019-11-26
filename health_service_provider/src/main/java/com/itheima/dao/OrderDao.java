@@ -1,5 +1,6 @@
 package com.itheima.dao;
 
+import com.github.pagehelper.Page;
 import com.itheima.pojo.Order;
 
 import java.util.List;
@@ -28,4 +29,10 @@ public interface OrderDao {
 
      //热门套餐，查询前5条
      List<Map> findHotSetmeal();
+
+     //分页
+     Page<Map<String,Object>> selectByCondition(String queryString);
+
+     //确认到诊
+    void confirmOrderStatus(Integer id);
 }

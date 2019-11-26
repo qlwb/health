@@ -81,4 +81,23 @@
           group by o.setmeal_id
           order by setmeal_count desc limit 0,4
     </select>
+
+
+    <!--分页查询所有预约列表-->
+    <!--分页查询-->
+    <select id="selectByCondition" parameterType="String" resultType="hashMap">
+        select m.id as mid, m.name as name, o.orderDate as orderdate, m.phoneNumber as telephone, o.orderType as ordertype, o.orderStatus as orderstatus from
+        t_order o, t_member m
+        <where>
+            o.member_id = m.id
+            <if test="value != null and value.length > 0 ">
+                and phoneNumber like #{value}
+            </if>
+        </where>
+    </select>
+
+    <!--确认预约到诊状态-->
+    <update id="confirmOrderStatus" parameterType="integer">
+        update t_order set orderstatus="已到诊" where member_id = #{value}
+    </update>
 </mapper>

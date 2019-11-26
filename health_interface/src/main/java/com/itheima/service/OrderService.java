@@ -1,5 +1,6 @@
 package com.itheima.service;
 
+import com.itheima.entity.PageResult;
 import com.itheima.entity.Result;
 
 import java.util.Map; /**
@@ -13,4 +14,10 @@ public interface OrderService {
 
     //根据id查询预约信息，包括套餐信息和会员信息
     Map findById(Integer id) throws Exception;
+
+    //分页
+    PageResult pageQuery(Integer currentPage, Integer pageSize, String queryString);
+
+    //确认到诊
+    void confirmOrder(Integer id);
 }

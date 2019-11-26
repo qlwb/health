@@ -1,14 +1,18 @@
 package com.itheima.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.itheima.constant.MessageConstant;
 import com.itheima.dao.MemberDao;
 import com.itheima.dao.OrderDao;
 import com.itheima.dao.OrderSettingDao;
+import com.itheima.entity.PageResult;
 import com.itheima.entity.Result;
 import com.itheima.pojo.Member;
 import com.itheima.pojo.Order;
 import com.itheima.pojo.OrderSetting;
+import com.itheima.pojo.Setmeal;
 import com.itheima.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,5 +100,20 @@ public class OrderServiceImpl implements OrderService {
         }
         return map;
     }
+
+    //分页
+    public PageResult pageQuery(Integer currentPage, Integer pageSize, String queryString) {
+        //分页助手设置当前页，每页显示条数
+        PageHelper.startPage(currentPage, pageSize);
+        Page<Map<String,Object>> page= orderDao.selectByCondition(queryString);
+        //封装返回的结果对象
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    //确认到诊
+    public void confirmOrder(Integer id) {
+        orderDao.confirmOrderStatus(id);
+    }
+
 }
 
