@@ -1,5 +1,6 @@
 package com.itheima.dao;
 
+import com.github.pagehelper.Page;
 import com.itheima.pojo.Permission;
 
 import java.util.List;
@@ -18,4 +19,22 @@ public interface PermissionDao {
 
     //查询角色拥有的权限id
     List<Integer> queryPermissionIdsByRoleId(Integer roleId);
+
+    //分页
+    Page<Permission> selectByCondition(String queryString);
+
+    //添加
+    void add(Permission permission);
+
+    //根据id查找权限
+    Permission findById(Integer id);
+
+    //修改
+    void update(Permission permission);
+
+    //根据id删除
+    void deleteById(Integer id);
+
+    //根据权限id删除角色id
+    void deleteRoleIdByPermissionId(Integer id);
 }

@@ -17,4 +17,39 @@
     <select id="queryPermissionIdsByRoleId" parameterType="int" resultType="int">
         select permission_id from t_role_permission where role_id=#{roleId}
     </select>
+
+    <!--分页-->
+    <select id="selectByCondition" parameterType="string" resultType="permission">
+        select * from t_permission
+        <where>
+            <if test="value != null and value.length > 0">
+                name like #{value} or keyword like #{value}
+            </if>
+        </where>
+    </select>
+
+    <!--添加-->
+    <insert id="add" parameterType="permission">
+        insert into t_permission values(null,#{name},#{keyword},#{description})
+    </insert>
+
+    <!--根据id查找权限-->
+    <select id="findById" parameterType="int" resultType="permission">
+        select * from t_permission where id=#{id}
+    </select>
+
+    <!--根据id修改权限-->
+    <update id="update" parameterType="permission" >
+        update t_permission set name=#{name},keyword=#{keyword},description=#{description} where id=#{id}
+    </update>
+
+    <!--根据id删除权限-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_permission where id=#{id}
+    </delete>
+
+    <!--根据权限id删除角色id-->
+    <delete id="deleteRoleIdByPermissionId" parameterType="int">
+        delete from t_role_permission where permission_id=#{id}
+    </delete>
 </mapper>

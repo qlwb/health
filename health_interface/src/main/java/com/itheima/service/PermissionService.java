@@ -1,5 +1,6 @@
 package com.itheima.service;
 
+import com.itheima.entity.PageResult;
 import com.itheima.pojo.Permission;
 
 import java.util.List;
@@ -14,4 +15,19 @@ public interface PermissionService {
 
     //查询角色拥有的权限id
     List<Integer> queryPermissionIdsByRoleId(Integer roleId);
+
+    //分页
+    PageResult pageQuery(Integer currentPage, Integer pageSize, String queryString);
+
+    //添加
+    void add(Permission permission);
+
+    //查询一个权限
+    Permission findById(Integer id);
+
+    //修改
+    void update(Permission permission);
+
+    //根据id删除
+    void deleteById(Integer id);
 }
