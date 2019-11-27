@@ -1,5 +1,6 @@
 package com.itheima.service;
 
+import com.itheima.entity.PageResult;
 import com.itheima.pojo.Member;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface MemberService {
 
     //查询yyyy.MM的会员人数
     List<Integer> findMemberCountByMonth(List<String> list);
+
+    PageResult pageQuery(Integer currentPage, Integer pageSize, String queryString);
 }
