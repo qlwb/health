@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,user-scalable=no,minimal-ui">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../img/asset-favico.ico">
+        <title>传智健康</title>
+        <link rel="stylesheet" href="../css/page-health-index.css" />
+        <link rel="stylesheet" href="../css/page-health-login.css" />
+        <link rel="stylesheet" href="../plugins/elementui/index.css" />
+        <script src="../plugins/jquery/dist/jquery.min.js"></script>
+        <script src="../plugins/healthmobile.js"></script>
+        <script src="../plugins/vue/vue.js"></script>
+        <script src="../plugins/vue/axios-0.18.0.js"></script>
+        <script src="../plugins/elementui/index.js"></script>
+    </head>
+    <body data-spy="scroll" data-target="#myNavbar" data-offset="150">
+        <div class="app" id="app">
+            <!-- 页面头部 -->
+            <div class="top-header">
+                <span class="f-left"><i class="icon-back" onclick="history.go(-1)"></i></span>
+                <span class="center">传智健康</span>
+                <span class="f-right"><i class="icon-more"></i></span>
+            </div>
+            <!-- 页面内容 -->
+            <div class="contentBox">
+                <div class="list-column2">
+                    <el-collapse v-for="c in questionnaires" accordion>
+                        <el-collapse-item title="阳虚体质问卷" name="1"  >
+                            <ul class="table-list">
+                                <li class="table-item" v-for="q in questions">
+                                    <el-card class="box-card" shadow="hover">
+                                        <div class="text item">{{q.name}}</div>
+                                        <br/>
+                                        <template>
+                                            <el-radio-group v-model="q.value">
+                                                <el-radio :label="1">A.没有(根本不)</el-radio>
+                                                <el-radio :label="2">B.很少(有一点)</el-radio>
+                                                <el-radio :label="3">C.有时(有些)</el-radio>
+                                                <el-radio :label="4">D.经常</el-radio>
+                                                <el-radio :label="5">E.总是</el-radio>
+                                            </el-radio-group>
+                                        </template>
+                                        <br/>
+                                    </el-card>
+                                    <br/>
+                                </li>
+                            </ul>
+                        </el-collapse-item>
+                    </el-collapse>
+                   <!-- <el-card class="box-card" shadow="hover">
+                        <div class="text item">请输入您的姓名</div>
+                        <br/>
+                        <template>
+                            <el-input v-model="name" placeholder="请输入您的姓名"></el-input>
+                        </template>
+                        <br/>
+                    </el-card>
+                    <el-card class="box-card" shadow="hover">
+                        <div class="text item">请输入您的手机号</div>
+                        <br/>
+                        <template>
+                            <el-input v-model="phoneNumber" placeholder="请输入您的手机号"></el-input>
+                        </template>
+                        <br/>
+                    </el-card>
+                    <div class="tool-btn">
+                        <a class="btn next-btn" href="#" @click.prevent="submit()">提交</a>
+                        <a class="btn cancle-btn">取消</a>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var vue = new Vue({
+            el:'#app',
+            data:{
+                questionnaires:[],
+                questions: [],
+                activeName: '1'
+            },
+            methods: {
+                submit(){
+
+                }
+            },
+            mounted (){
+                axios.post("/questionnaire/findAll.do").then((response)=>{
+                    if(response.data.flag){
+                        this.questionnaires = response.data.data;
+                        this.questions = response.data.data.questions;
+                    }
+                });
+            }
+        });
+    </script>
+</html>

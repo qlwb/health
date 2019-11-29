@@ -106,6 +106,21 @@ public class OrderServiceImpl implements OrderService {
         //分页助手设置当前页，每页显示条数
         PageHelper.startPage(currentPage, pageSize);
         Page<Map<String,Object>> page= orderDao.selectByCondition(queryString);
+        for (Map<String, Object> map : page) {
+            String orderstatus = (String) map.get("orderstatus");
+            Date orderdate = (Date) map.get("orderdate");
+            try {
+                String s = DateUtils.parseDate2String(orderdate);
+                map.put("orderdate",s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(orderstatus.equals("已到诊")){
+                map.put("isTrue",true);
+            }else{
+                map.put("isTrue",false);
+            }
+        }
         //封装返回的结果对象
         return new PageResult(page.getTotal(), page.getResult());
     }
@@ -113,6 +128,89 @@ public class OrderServiceImpl implements OrderService {
     //确认到诊
     public void confirmOrder(Integer id) {
         orderDao.confirmOrderStatus(id);
+    }
+
+    //电话预约
+    public Result orderByAdmin(Map map, Integer[] setmealIds) throws Exception {
+        //获取预约时间
+        String orderDate = (String) map.get("orderDate");
+        System.out.println(orderDate);
+        Date date = DateUtils.parseString2Date(orderDate);//字符串日期转换成yyyy-MM-dd的日期类型
+        //查询所选日期能不能进行体检预约
+        OrderSetting orderSetting = orderSettingDao.findByOrderDate(date);
+        if (orderSetting == null) {
+            //所选日期不能进行体检预约
+            return new Result(false, MessageConstant.SELECTED_DATE_CANNOT_ORDER);
+        }
+        //检查预约日期是否预约已满
+        int number = orderSetting.getNumber();
+        //可预约人数
+        int reservations = orderSetting.getReservations();
+        //已预约人数
+        if (reservations >= number) {
+            //预约已满，不能预约
+            return new Result(false, MessageConstant.ORDER_FULL);
+        }
+        //检查当前用户是否为会员，根据手机号判断
+        String telephone = (String) map.get("telephone");
+        Member member = memberDao.findByTelephone(telephone);
+        //防止重复预约
+        if (member != null) {
+            Integer memberId = member.getId();
+            int setmealId = Integer.parseInt((String) map.get("setmealId"));
+            Order order = new Order(memberId, date, null, null, setmealId);
+            //查询某日期是否存在某会员预约了某套餐
+            List<Order> list = orderDao.findByCondition(order);
+            if (list != null && list.size() > 0) {
+                //已经完成了预约，不能重复预约
+                return new Result(false, MessageConstant.HAS_ORDERED);
+            }
+        }
+        //可以预约，设置预约人数加一
+        orderSetting.setReservations(orderSetting.getReservations() + 1);
+        orderSettingDao.editReservationsByOrderDate(orderSetting);
+        if (member == null) {
+            //当前用户不是会员，需要添加到会员表
+            member = new Member();
+            member.setName((String) map.get("name"));
+            member.setPhoneNumber(telephone);
+            member.setIdCard((String) map.get("idCard"));
+            member.setSex((String) map.get("sex"));
+            member.setRegTime(new Date());
+            memberDao.add(member);
+        }
+        if(setmealIds!=null&&setmealIds.length>0){
+            for (Integer setmealId : setmealIds) {
+                //保存预约信息到预约表
+                Order order = new Order(member.getId(), date, (String) map.get("orderType"), Order.ORDERSTATUS_NO, setmealId);
+                orderDao.add(order);
+            }
+        }
+
+        return new Result(true, MessageConstant.ORDER_SUCCESS);
+    }
+
+    //后台查找订单
+    public Map findByIdAdmin(Integer id) {
+        return orderDao.findByIdAdmin(id);
+    }
+
+    //根据订单id查询套餐id
+    public List<Integer> setMealIdByOrderId(Integer id) {
+        return orderDao.findMealIdByOrderId(id);
+    }
+
+    //后台修改预约订单
+    public void update(Map map, Integer[] setmealIds) throws Exception {
+        Integer id = (Integer) map.get("id");
+        map.put("orderType", Order.ORDERTYPE_TELEPHONE);
+        orderDao.deleteById(id);
+        orderByAdmin(map,setmealIds);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        orderDao.deleteById(id);
     }
 
 }

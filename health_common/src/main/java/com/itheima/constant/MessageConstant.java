@@ -104,4 +104,8 @@ public class MessageConstant {
     public static final String GET_SETMEAL_LIST_FAIL = "查询套餐列表数据失败";
     public static final String CONFIRM_ORDER_STATUS_SUCCESS = "到诊状态确认成功";
     public static final String CONFIRM_ORDER_STATUS_FAIL = "到诊状态确认失败";
+    public static final String EDIT_ORDER_SUCCESS = "预约订单修改成功";
+    public static final String EDIT_ORDER_FAIL = "预约订单修改失败";
+    public static final String QUERY_QUESTIONNAIRE_SUCCESS = "查询问卷数据成功";
+    public static final String QUERY_QUESTIONNAIRE_FAIL = "查询问卷数据失败";
 }

@@ -35,4 +35,13 @@ public interface OrderDao {
 
      //确认到诊
     void confirmOrderStatus(Integer id);
+
+    //后台查找订单
+     Map findByIdAdmin(Integer id);
+
+     //根据订单id查询套餐id
+    List<Integer> findMealIdByOrderId(Integer id);
+
+    //删除订单
+    void deleteById(Integer id);
 }

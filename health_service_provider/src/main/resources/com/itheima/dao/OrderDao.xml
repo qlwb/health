@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.itheima.dao.OrderDao" >
+<mapper namespace="com.itheima.dao.OrderDao">
     <resultMap id="baseResultMap" type="com.itheima.pojo.Order">
         <id column="id" property="id"/>
         <result column="member_id" property="memberId"/>
@@ -86,10 +86,11 @@
     <!--分页查询所有预约列表-->
     <!--分页查询-->
     <select id="selectByCondition" parameterType="String" resultType="hashMap">
-        select m.id as mid, m.name as name, o.orderDate as orderdate, m.phoneNumber as telephone, o.orderType as ordertype, o.orderStatus as orderstatus from
-        t_order o, t_member m
+        select o.id id,m.id as mid, m.name as name, s.name as setmealName,o.orderDate as orderdate, m.phoneNumber as telephone,
+        o.orderType as ordertype, o.orderStatus as orderstatus from
+        t_order o, t_member m,t_setmeal s
         <where>
-            o.member_id = m.id
+            o.member_id = m.id and o.setmeal_id=s.id
             <if test="value != null and value.length > 0 ">
                 and phoneNumber like #{value}
             </if>
@@ -98,6 +99,21 @@
 
     <!--确认预约到诊状态-->
     <update id="confirmOrderStatus" parameterType="integer">
-        update t_order set orderstatus="已到诊" where member_id = #{value}
+        update t_order set orderstatus="已到诊" where id = #{value}
     </update>
+
+
+   <!--后台查找订单-->
+    <select id="findByIdAdmin" parameterType="int" resultType="map">
+        select o.id id, o.orderDate orderDate ,m.name name,m.idCard idCard,m.phoneNumber telephone from t_order o,t_member m where o.member_id = m.id  and o.id= #{id}
+    </select>
+
+    <!--根据订单id查询套餐id-->
+    <select id="findMealIdByOrderId" parameterType="int" resultType="int">
+        select setmeal_id from t_order where id=#{id}
+    </select>
+
+    <delete id="deleteById" parameterType="int">
+        delete from t_order where id=#{id}
+    </delete>
 </mapper>
