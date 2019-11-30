@@ -115,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(orderstatus.equals("已到诊")){
+            if("已到诊".equals(orderstatus)){
                 map.put("isTrue",true);
             }else{
                 map.put("isTrue",false);

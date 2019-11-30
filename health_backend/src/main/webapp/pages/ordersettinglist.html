@@ -33,7 +33,7 @@
                 <el-input placeholder="手机号" v-model="pagination.queryString" style="width: 200px;"
                           class="filter-item"></el-input>
                 <el-date-picker
-                        v-model="pagination.orderStart"
+                        v-model="pagination.orderDate"
                         type="daterange"
                         value-format="yyyy-MM-dd"
                         range-separator="至"
@@ -329,7 +329,11 @@
                 var param = {
                     currentPage: this.pagination.currentPage,//页码
                     pageSize: this.pagination.pageSize, //每页显示的记录数
-                    queryString: this.pagination.queryString //查询条件
+                    queryString: this.pagination.queryString,//查询条件
+                    orderDate: this.pagination.orderDate,//预约时间
+                    type: this.pagination.type,//预约类型
+                    orderStatus: this.pagination.orderStatus,//预约状态
+                    setmealId: this.pagination.setmealId//预约套餐
                 };
                 axios.post("/order/findPage.do", param).then((response) => {
                     //获得响应结果,进行数据绑定
@@ -455,8 +459,26 @@
                     .then(() => {
                         axios.get("/order/delete.do?id=" + row.id).then((res) => {
                             if (!res.data.flag) {
-                                //删除失败
-                                this.$message.error(res.data.message);
+                                // 删除失败, 可能是因为外键
+                                this.$confirm("确定删除用户"+row.name+"吗", "提示", {
+                                    type: 'warning'
+                                }).then(()=>{
+                                    axios.get("/order/deleteAddressIdsByOrderId.do?id="+row.id).then((res)=>{
+                                        if (res.data.flag){
+                                            // 删除成功
+                                            this.$message({
+                                                type: "success",
+                                                message: res.data.message
+                                            });
+                                            // 设置当前页为1
+                                            this.currentPage = 1;
+                                            // 刷新页面
+                                            this.findPage();
+                                        } else {
+                                            this.message.error(res.data.message);
+                                        }
+                                    });
+                                })
                             } else {
                                 //删除成功
                                 this.$message({

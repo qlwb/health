@@ -107,5 +107,16 @@ public class OrderController {
         return new Result(true, MessageConstant.DELETE_SETMEAL_SUCCESS);
     }
 
+    @RequestMapping("/deleteAddressIdsByOrderId")
+    public Result deleteAddressIdsByOrderId(Integer id) {
+        try {
+//            orderService.deleteAddressIdsByOrderId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.DELETE_SETMEAL_FAIL);
+        }
+        return new Result(true, MessageConstant.DELETE_SETMEAL_SUCCESS);
+    }
+
 
 }
