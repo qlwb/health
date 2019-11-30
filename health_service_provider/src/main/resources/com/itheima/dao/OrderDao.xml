@@ -105,7 +105,7 @@
 
    <!--后台查找订单-->
     <select id="findByIdAdmin" parameterType="int" resultType="map">
-        select o.id id, o.orderDate orderDate ,m.name name,m.idCard idCard,m.phoneNumber telephone from t_order o,t_member m where o.member_id = m.id  and o.id= #{id}
+        select o.id id, o.orderDate orderDate ,m.id memberId,m.name name,m.idCard idCard,m.phoneNumber telephone from t_order o,t_member m where o.member_id = m.id  and o.id= #{id}
     </select>
 
     <!--根据订单id查询套餐id-->

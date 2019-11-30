@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.itheima.pojo.Member;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MemberDao {
      //查询所有会员
@@ -38,4 +39,5 @@ public interface MemberDao {
 
      //总会员数
      Integer findMemberTotalCount();
+
 }

@@ -157,14 +157,19 @@ public class OrderServiceImpl implements OrderService {
         //防止重复预约
         if (member != null) {
             Integer memberId = member.getId();
-            int setmealId = Integer.parseInt((String) map.get("setmealId"));
-            Order order = new Order(memberId, date, null, null, setmealId);
-            //查询某日期是否存在某会员预约了某套餐
-            List<Order> list = orderDao.findByCondition(order);
-            if (list != null && list.size() > 0) {
-                //已经完成了预约，不能重复预约
-                return new Result(false, MessageConstant.HAS_ORDERED);
+            if(setmealIds!=null&&setmealIds.length>0){
+                for (Integer setmealId : setmealIds) {
+                    Order order = new Order(memberId, date, null, null, setmealId);
+                    //查询某日期是否存在某会员预约了某套餐
+                    List<Order> list = orderDao.findByCondition(order);
+                    if (list != null && list.size() > 0) {
+                        //已经完成了预约，不能重复预约
+                        return new Result(false, MessageConstant.HAS_ORDERED);
+                    }
+                }
             }
+
+
         }
         //可以预约，设置预约人数加一
         orderSetting.setReservations(orderSetting.getReservations() + 1);
@@ -203,9 +208,16 @@ public class OrderServiceImpl implements OrderService {
     //后台修改预约订单
     public void update(Map map, Integer[] setmealIds) throws Exception {
         Integer id = (Integer) map.get("id");
+        Member member = new Member();
+        member.setId((Integer)map.get("memberId"));
+        member.setIdCard((String)map.get("idCard"));
+        member.setName((String)map.get("name"));
+        member.setPhoneNumber((String)map.get("telephone"));
+        memberDao.edit(member);
         map.put("orderType", Order.ORDERTYPE_TELEPHONE);
         orderDao.deleteById(id);
         orderByAdmin(map,setmealIds);
+
     }
 
     @Override

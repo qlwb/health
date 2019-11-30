@@ -78,29 +78,24 @@
                 <el-table-column label="预约状态" align="center">
                     <template slot-scope="scope">
                         <el-switch
-                                v-if="scope.row.orderstatus==='已到诊'"
-                                active-text="已到诊"
                                 v-model="scope.row.isTrue"
                                 active-color="#13ce66"
                                 disabled
                                 inactive-color="#ff4949">
                         </el-switch>
-                        <el-switch
-                                v-if="scope.row.orderstatus==='未到诊'"
-                                active-text="未到诊"
-                                v-model="scope.row.isTrue"
-                                @change="handleUpdate(scope.row)"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949">
-                        </el-switch>
                     </template>
                 </el-table-column>
+                <!--<el-table-column prop="orderstatus" label="预约状态" align="center"></el-table-column>-->
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
+                        <!--v-if="scope.row.orderstatus==='未到诊'" -->
+                        <el-button type="primary" size="mini" v-if="scope.row.orderstatus==='未到诊'"
+                                   @click="handleUpdate(scope.row)">确认到诊
+                        </el-button>
                         <el-button size="mini" type="primary" v-if="scope.row.orderstatus==='未到诊'"
                                    @click="handleSet(scope.row)">编辑
                         </el-button>
-                        <el-button size="mini" type="danger" v-if="scope.row.orderstatus==='未到诊'" @click="handleDelete(scope.row)">删除</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -380,7 +375,6 @@
                                 });
                             } else {
                                 this.$message.error("日期未到，不能更改到诊状态！！");
-                                row.isTrue=false;
                             }
                         });
                 }
